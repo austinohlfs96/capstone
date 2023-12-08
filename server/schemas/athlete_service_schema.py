@@ -9,9 +9,9 @@ class AthleteServiceSchema(ma.SQLAlchemySchema):
     fields = ["id", "discipline", "notes", "technician_notes", "reviews", "service_id", "athlete_id", "equipment_id", "service_id", "appointment_id", "athletes", "services", "equipment", "appointment", "created_at", "updated_at"]
     
   discipline = fields.String(required=True, validate=validate.Length(min=2, max=40))
-  notes = fields.String(required=False, validate=validate.Length(min=0, max=500))
-  technician_notes = fields.String(required=False, validate=validate.Length(min=0, max=500))
-  reviews = fields.String(required=False, validate=validate.Length(min=0, max=500))
+  notes = fields.String(allow_none=True, validate=validate.Length(min=0, max=500))
+  technician_notes = fields.String(allow_none=True, validate=validate.Length(min=0, max=500))
+  reviews = fields.String(allow_none=True, validate=validate.Length(min=0, max=500))
   athlete_id = fields.Integer(required=True)
   service_id = fields.Integer(required=True)
   equipment_id = fields.Integer(required=True)

@@ -43,7 +43,7 @@ api.add_resource(EquipmentById, "/equipment/<int:id>")
 api.add_resource(Coaches, '/coaches')
 api.add_resource(CoachById, '/coach/<int:id>')
 api.add_resource(Appointments, '/appointments')
-api.add_resource(AppointmentById, '/appointments/<int:id>')
+api.add_resource(AppointmentById, '/appointment/<int:id>')
 api.add_resource(AthleteServices, '/athlete-services')
 api.add_resource(AthleteServiceById,"/athlete-service/<int:id>")
 

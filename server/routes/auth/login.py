@@ -28,7 +28,7 @@ class Login(Resource):
                 set_refresh_cookies(res, refresh_token)
                 return res
 
-            return {"message": "Invalid coach Credentials"}, 403
+            return {"message": "Invalid coaches Credentials"}, 403
 
         except Exception as e:
-            return {"message": "Invalid coach Credentials"}, 403
+            return {"message": "Invalid coaches Credentials"}, 403

@@ -23,7 +23,7 @@ class Coach(db.Model, SerializerMixin):
   created_at = db.Column(db.DateTime, server_default=func.now())
   updated_at = db.Column(db.DateTime, onupdate=func.now())
   
-  athletes = db.relationship('Athlete', back_populates='coaches')
+  athletes = db.relationship('Athlete', back_populates='coaches', cascade="all, delete-orphan")
   appointment = db.relationship('Appointment', back_populates='coaches')
 
   # serialize_only = ("name", "team", "athletes", "bio", "appointments")
@@ -62,17 +62,17 @@ class Coach(db.Model, SerializerMixin):
         raise ValueError("Bio must be less than 250 characters")
       return value
   
-  # @hybrid_property
-  # def password_hash(self):
-  #     raise AttributeError("Password hash is not readable")
+  @hybrid_property
+  def password_hash(self):
+      raise AttributeError("Password hash is not readable")
 
-  # @password_hash.setter
-  # def password_hash(self, new_password):
-  #     hashed_password = bcrypt.generate_password_hash(new_password).decode("utf-8")
-  #     self._password_hash = hashed_password
+  @password_hash.setter
+  def password_hash(self, new_password):
+      hashed_password = bcrypt.generate_password_hash(new_password).decode("utf-8")
+      self._password_hash = hashed_password
 
-  # def authenticate(self, password_to_check):
-  #       return bcrypt.check_password_hash(self._password_hash, password_to_check)
+  def authenticate(self, password_to_check):
+        return bcrypt.check_password_hash(self._password_hash, password_to_check)
 
   def __repr__(self):
         return f"Coach #{self.id}:{self.name}"

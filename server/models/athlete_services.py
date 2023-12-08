@@ -15,9 +15,9 @@ class AthleteService(db.Model, SerializerMixin):
   __tablename__ = 'athlete_services'
   id = db.Column(db.Integer, primary_key=True)
   discipline = db.Column(db.String, nullable=False)
-  notes = db.Column(db.String, nullable=True)
-  technician_notes = db.Column(db.String, nullable=True)
-  reviews = db.Column(db.String, nullable=True)
+  notes = db.Column(db.String)
+  technician_notes = db.Column(db.String)
+  reviews = db.Column(db.String)
   service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
   athlete_id = db.Column(db.Integer, db.ForeignKey('athletes.id'))
   equipment_id = db.Column(db.Integer, db.ForeignKey('equipment.id'))
@@ -46,33 +46,39 @@ class AthleteService(db.Model, SerializerMixin):
   
   @validates("notes")
   def validate_notes(self, _, value):
-      if not isinstance(value, str):
-        raise Exception('Notes must be a string.')
-      elif len(value) < 0:
-        raise ValueError("Notes must be more than 5 characters")
-      elif len(value) >= 500:
-        raise ValueError("Notes must be less than 250 characters")
+    if value is None:
       return value
+    elif not isinstance(value, str):
+      raise Exception('Notes must be a string.')
+    elif len(value) < 0:
+      raise ValueError("Notes must be more than 5 characters")
+    elif len(value) >= 500:
+      raise ValueError("Notes must be less than 250 characters")
+    return value
     
   @validates("technician_notes")
   def validate_technician_notes(self, _, value):
-      if not isinstance(value, str):
-        raise Exception('Technician notes must be a string.')
-      elif len(value) < 0:
-        raise ValueError("Technician notes must be more than 5 characters")
-      elif len(value) >= 500:
-        raise ValueError("Technician notes must be less than 250 characters")
+    if value is None:
       return value
+    if not isinstance(value, str):
+      raise Exception('Technician notes must be a string.')
+    elif len(value) < 0:
+      raise ValueError("Technician notes must be more than 5 characters")
+    elif len(value) >= 500:
+      raise ValueError("Technician notes must be less than 250 characters")
+    return value
     
   @validates("reviews")
   def validate_reviews(self, _, value):
-      if not isinstance(value, str):
-        raise Exception('Reviews must be a string.')
-      elif len(value) < 0:
-        raise ValueError("Reviews must be more than 5 characters")
-      elif len(value) >= 500:
-        raise ValueError("Reviews must be less than 250 characters")
+    if value is None:
       return value
+    if not isinstance(value, str):
+      raise Exception('Reviews must be a string.')
+    elif len(value) < 0:
+      raise ValueError("Reviews must be more than 5 characters")
+    elif len(value) >= 500:
+      raise ValueError("Reviews must be less than 250 characters")
+    return value
   
   @validates("athlete_id")
   def validate_athlete_id(self, _, value):

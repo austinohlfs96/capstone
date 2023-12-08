@@ -28,9 +28,9 @@ class Athlete(db.Model, SerializerMixin):
   created_at = db.Column(db.DateTime, server_default=func.now())
   updated_at = db.Column(db.DateTime, onupdate=func.now())
   
-  equipment = db.relationship("Equipment", back_populates="athletes")
+  equipment = db.relationship("Equipment", back_populates="athletes", cascade="all, delete-orphan")
   coaches = db.relationship("Coach", back_populates="athletes")
-  athlete_services = db.relationship("AthleteService", back_populates="athletes") 
+  athlete_services = db.relationship("AthleteService", back_populates="athletes", cascade="all, delete-orphan") 
   
   # serialize_rules = ("-coaches.athletes", "-athlete_services.athletes")
   

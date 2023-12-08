@@ -32,7 +32,7 @@ class Register(Resource):
             res = jsonify(serialized_coach)
             set_access_cookies(res, jwt)
             set_refresh_cookies(res, refresh_token)
-            return res, 201
+            return serialized_coach, 201
         except (Exception, IntegrityError) as e:
             db.session.rollback()
             return {"message": str(e)}, 400

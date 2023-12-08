@@ -11,8 +11,12 @@ from flask_bcrypt import Bcrypt
 from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
+from dotenv import load_dotenv
 import os
 # Local imports
+
+load_dotenv()
+
 
 # Instantiate app, set attributes
 app = Flask(__name__)
@@ -22,11 +26,8 @@ app.config["SQLALCHEMY_ECHO"] = True
 app.secret_key = os.environ.get("APP_SECRET")
 app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
 app.config["JWT_TOKEN_LOCATION"] = ["headers", "cookies", "json", "query_string"]
-#! In production, this should always be set to True
 app.config["JWT_COOKIE_SECURE"] = False
-#! Change time in production
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)
-#! Change time in production
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(minutes=15)
 
 # Define metadata, instantiate db
