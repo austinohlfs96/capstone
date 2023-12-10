@@ -23,12 +23,19 @@ class Login(Resource):
                 jwt = create_access_token(identity=coach.id)
                 refresh_token = create_refresh_token(identity=coach.id)
                 serialized_coach = coach_schema.dump(coach)
-                res = make_response(serialized_coach, 200)
-                set_access_cookies(res, jwt)
-                set_refresh_cookies(res, refresh_token)
-                return res
+                # res = make_response(serialized_coach, 200)
+                # set_access_cookies(res, jwt)
+                # set_refresh_cookies(res, refresh_token)
+                return make_response(
+                    {
+                        "coach": serialized_coach,
+                        "jwt_token": jwt,
+                        "refresh_token": refresh_token,
+                    },
+                    201,
+                )
 
-            return {"message": "Invalid coaches Credentials"}, 403
+            return {"message": "Invalid User Credentials"}, 403
 
         except Exception as e:
-            return {"message": "Invalid coaches Credentials"}, 403
+            return {"message": "Invalid User Credentials"}, 403

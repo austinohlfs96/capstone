@@ -18,6 +18,7 @@ flask-jwt-extended = "*"
 marshmallow-sqlalchemy = "*"
 python-dotenv = "*"
 flask-security-too = "*"
+flask-bcrypt = "*"
 
 [requires]
 python_full_version = "3.8.13"

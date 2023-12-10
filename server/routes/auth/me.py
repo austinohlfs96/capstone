@@ -4,6 +4,7 @@ from flask_jwt_extended import (
     current_user,
 )
 from config import db
+from models.coaches import Coach
 from schemas.coaches_schema import CoachSchema
 
 coach_schema = CoachSchema(session=db.session)
