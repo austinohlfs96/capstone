@@ -32,7 +32,7 @@ class Register(Resource):
             return make_response(
                 {
                     "coach": serialized_coach,
-                    "jwt_token": jwt,
+                    "token": jwt,
                     "refresh_token": refresh_token,
                 },
                 201,

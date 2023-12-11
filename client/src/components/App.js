@@ -1,5 +1,4 @@
 import React from 'react'
-import Head from "./Header"
 import Router from "./Router"
 
 function App() {

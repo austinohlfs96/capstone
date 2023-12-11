@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useCallback } from 'react';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import AlertBar from './AlertBar'
@@ -18,11 +18,19 @@ const Signup = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [coach, setCoach] = useState(null)
+
+  const updateCoach = (coach) => setCoach(coach)
+  const [error, setError] = useState("");
   
 
   useEffect(() => {
     setSnackbarOpen(false)
   }, [])
+
+  const handleNewError = useCallback((error) => {
+    setError(error);
+  }, []);
 
   const formSchema = yup.object().shape({
     email: yup.string().required('Please enter your email').typeError('Please enter a string.'),
@@ -54,22 +62,19 @@ const Signup = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(values),
-        });
+        })
   
-        if (response.ok) {
-          const data = await response.json();
-          const token = data.token;
-  
-          // Save the token to local storage or cookies
-          localStorage.setItem('authToken', token);
-  
-          // Redirect to the userhome page
-          navigate('/userhome');
-        } else {
-          setSnackbarMessage('User cannot be created.');
-          setSnackbarSeverity('error');
-          setSnackbarOpen(true);
-        }
+        .then(res => {
+          if (res.ok) {
+              res.json().then(resObj => {
+                updateCoach(resObj.coach)
+                localStorage.setItem("jwt_token", resObj.token)
+              })
+              navigate('/userhome');
+          } else {
+              res.json().then(errorObj => handleNewError(errorObj.message))
+          }
+      })
       } catch (error) {
         console.error('An unexpected error occurred', error);
         setSnackbarMessage('An unexpected error occurred.');
@@ -127,7 +132,7 @@ const Signup = () => {
           onChange={handleInputChange}
           value={formik.values.team}
           placeholder="Enter team"
-          required="true"
+        
         />
         </Form.Field>
         <Form.Field>
@@ -160,59 +165,6 @@ const Signup = () => {
         <Button type='submit'>Submit</Button>
         <Button type='submit' onClick={() => navigate('/')}>Cancel</Button>
       </Form>
-      {/* <form id='signupForm' onSubmit={formik.handleSubmit}>
-        <h1 className='modaltitle'>Register New User</h1>
-        <h3 className='modaltag'>Please enter your email and password.</h3>
-        <div className='signupInput'>
-        <input className='signup'
-          id='email'
-          name="email"
-          onChange={handleInputChange}
-          value={formik.values.email}
-          placeholder="Enter Email"
-          required="true"
-        />
-        <input className='signup'
-          id='name'
-          name="name"
-          onChange={handleInputChange}
-          value={formik.values.name}
-          placeholder="Enter name"
-          required="true"
-        />
-        <input className='signup'
-          id='team'
-          name="team"
-          onChange={handleInputChange}
-          value={formik.values.team}
-          placeholder="Enter team"
-          required="true"
-        />
-        <input className='signup'
-          id='password'
-          name="password"
-          type="password"
-          onChange={handleInputChange}
-          value={formik.values.password}
-          placeholder="Enter Password"
-          required="true"
-        />
-        <input className='signup'
-          id='confirmpassword'
-          name="confirmpassword"
-          type="password"
-          onChange={handleInputChange}
-          value={formik.values.confirmpassword}
-          placeholder="Confirm Password"
-          required="true"
-        />
-        </div>
-        <div id='loginButtons'>
-          <button className='modalbutton' type='submit'>Sign Up</button>
-          <button className='modalbutton' onClick={() => navigate('/')}>Cancel</button>
-          
-        </div>
-      </form> */}
       <AlertBar
           message={snackbarMessage}
           setAlertMessage={setSnackbarMessage}

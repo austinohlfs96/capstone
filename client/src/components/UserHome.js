@@ -1,5 +1,4 @@
 import MenuExampleTabularOnLeft from './NavBar'
-// import Header from './Header'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState, useCallback } from 'react'
 import AlertBar from './AlertBar'
@@ -14,9 +13,9 @@ const UserHome = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
-  const [user, setUser] = useState(null)
-
-  const updateUser = (user) => setUser(user)
+  const [coach, setCoach] = useState(null)
+  console.log(coach)
+  const updateCoach = (coach) => setCoach(coach)
 
   useEffect(() => {
     setSnackbarOpen(false)
@@ -26,19 +25,45 @@ const UserHome = () => {
     setError(error);
   }, []);
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    console.log(value)
+  }
+
+
   useEffect(() => {
-    if (!user) {
-      fetch("http://127.0.0.1:5555/me")
+    if (!coach) {
+      fetch("http://127.0.0.1:5555/auth/me",{
+        headers: {
+              Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
+            }
+      })
       .then(res => {
         if (res.ok) {
-          res.json().then(updateUser)
+          res.json().then(updateCoach)
+        } else if (res.status === 401) {
+          fetch("http://127.0.0.1:5555/auth/refresh", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
+            }
+          })
+          .then(res => {
+            if (res.ok) {
+              res.json().then(updateCoach)
+            } else {
+              res.json().then(errorObj => handleNewError(errorObj.msg))
+            }
+          })
         } else {
-          res.json().then(errorObj => handleNewError(errorObj.message))
+          res.json().then(errorObj => handleNewError(errorObj.message || errorObj.msg))
         }
       })
       .catch(handleNewError)
-    } 
-  }, [handleNewError, user])
+    }
+  }, [handleNewError, coach])
 
 //   useEffect(() => {
 // // Make a request to the backend with the token in the headers
@@ -96,26 +121,13 @@ const UserHome = () => {
       <Head/>
       {/*  */}
       <Image src={currentUser.profile_picture} size='small' />
-      <h1>{currentUser.name}</h1>
+      {coach && (
+  <>
+    <h1>{coach.name}</h1>
+  </>
+)}
       <MenuExampleTabularOnLeft/>
-      {/* <Header title={title} />
-      <NavBar />
-      <div className='homeContent'>
-        <h1>{currentUser.name}'s Datesmith Homepage</h1>
-        <img className='picture' src={currentUser.profile_picture} alt='user_photo'></img>
-        <h2>Age: {currentUser.age}</h2>
-        <h3>Gender: {currentUser.gender}</h3>
-        <h3>Location: {currentUser.location}</h3>
-        <p>{currentUser.bio}</p>
-        <button id='deleteProfile' onClick={handleDelete}>DELETE MY PROFILE</button>
-        <AlertBar
-          message={snackbarMessage}
-          setAlertMessage={setSnackbarMessage}
-          snackType={snackbarSeverity}
-          handleSnackType={setSnackbarSeverity}
-          onClose={handleCloseSnackbar}
-        />
-      </div> */}
+        
     </div>
   )
 }

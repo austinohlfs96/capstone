@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useCallback } from 'react';
 import { useFormik } from "formik";
 import * as yup from "yup";
 import AlertBar from './AlertBar'
@@ -9,17 +9,23 @@ import { Button, Divider, Form, Grid, Segment } from 'semantic-ui-react'
 const Login = () => {
   const navigate = useNavigate()
   
+  const [error, setError] = useState("");
   const [email, setEmail] = useState('')
   const [pass, setPass] = useState('')
   const [alertMessage, setAlertMessage] = useState(null);
   const [snackType, setSnackType] = useState('');
+  const [coach, setCoach] = useState(null)
+
+  const updateCoach = (coach) => setCoach(coach)
 
   const formSchema = yup.object().shape({
     email: yup.string().email('Invalid email').required("Please enter an email."),
     password: yup.string().required("Please enter a password.").min(5)
   })
   
-
+  const handleNewError = useCallback((error) => {
+    setError(error);
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -27,38 +33,67 @@ const Login = () => {
       password: '',
     },
     validationSchema: formSchema,
-    onSubmit: async (values) => {
-      try {
-        const res = await fetch('http://127.0.0.1:5555/auth/login', {
-          method: 'POST',
+    onSubmit: (values) => {
+      fetch('http://127.0.0.1:5555/auth/login', {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+              "Content-Type": "application/json"
           },
-          body: JSON.stringify(values, null, 2),
-        });
-
-        if (res.ok) {
-          const data = await res.json(); // Assuming the server sends back a JSON object with a token property
-          const token = data.token;
-
-          // Save the token to local storage or cookies
-          localStorage.setItem('authToken', token);
-
-          // Redirect to the userhome page
-          navigate('/userhome');
-        } else if (res.status === 401) {
-          alert('Invalid credentials');
-        } else {
-          alert('An error occurred');
-        }
-      } catch (error) {
-        console.error('An unexpected error occurred', error);
-        alert('An unexpected error occurred');
-      }
-    },
-  });
+          body: JSON.stringify(values)
+      })
+      .then(res => {
+          if (res.ok) {
+              res.json().then(resObj => {
+                updateCoach(resObj.coach)
+                localStorage.setItem("jwt_token", resObj.token)
+              })
+              navigate('/userhome');
+          } else {
+              res.json().then(errorObj => handleNewError(errorObj.message))
+          }
+      })
+      .catch(handleNewError)
+  },
+})
 
 
+
+// const formik = useFormik({
+//     initialValues: {
+//       email: '',
+//       password: '',
+//     },
+//     validationSchema: formSchema,
+//     onSubmit: async (values) => {
+//       try {
+//         const res = await fetch('http://127.0.0.1:5555/auth/login', {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify(values, null, 2),
+//         });
+
+//         if (res.ok) {
+//           const data = await res.json(); // Assuming the server sends back a JSON object with a token property
+//           const token = data.jwt_token;
+//           console.log(data)
+//           // Save the token to local storage or cookies
+//           localStorage.setItem('authToken', token);
+
+//           // Redirect to the userhome page
+//           navigate('/userhome');
+//         } else if (res.status === 401) {
+//           alert('Invalid credentials');
+//         } else {
+//           alert('An error occurred');
+//         }
+//       } catch (error) {
+//         console.error('An unexpected error occurred', error);
+//         alert('An unexpected error occurred');
+//       }
+//     },
+//   });
   
 
   // const handleLogin = () => {

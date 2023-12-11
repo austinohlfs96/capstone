@@ -19,6 +19,7 @@ marshmallow-sqlalchemy = "*"
 python-dotenv = "*"
 flask-security-too = "*"
 flask-bcrypt = "*"
+jsonify = "*"
 
 [requires]
 python_full_version = "3.8.13"
