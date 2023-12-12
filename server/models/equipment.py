@@ -16,8 +16,8 @@ class Equipment(db.Model, SerializerMixin):
   manifacture = db.Column(db.String, nullable=False)
   model = db.Column(db.String, nullable=False)
   year = db.Column(db.Integer, nullable=True)
-  length = db.Column(db.Float, nullable=False)
-  width = db.Column(db.Float, nullable=False)
+  length = db.Column(db.String, nullable=False)
+  width = db.Column(db.String, nullable=False)
   athlete_id = db.Column(db.Integer, db.ForeignKey("athletes.id"))
   created_at = db.Column(db.DateTime, server_default=func.now())
   updated_at = db.Column(db.DateTime, onupdate=func.now())
@@ -80,21 +80,21 @@ class Equipment(db.Model, SerializerMixin):
   def validate_lenght(self, _, value):
     if not value:
       raise AssertionError("Equipment length is required")
-    elif not isinstance(value, float):
-      raise Exception('Length must be a float.')
-    elif value < 20.0:
+    elif not isinstance(value, str):
+      raise Exception('Length must be a string.')
+    elif len(value) < 1:
       raise ValueError("Length must be more than 50.0")
-    elif value > 300.0:
+    elif len(value) > 10:
       raise ValueError("Length must be less than 300.0")
     return value
   
   @validates("width")
   def validate_width(self, _, value):
-    if not isinstance(value, float):
-      raise Exception('Width must be a float.')
-    elif value < 0.0:
+    if not isinstance(value, str):
+      raise Exception('Width must be a string.')
+    elif len(value) < 1:
       raise ValueError("Width must be more than 0.0")
-    elif value > 400.0:
+    elif len(value) > 10:
       raise ValueError("Width must be less than 400.0")
     return value
   

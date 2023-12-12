@@ -17,7 +17,9 @@ class Refresh(Resource):
     @jwt_required(refresh=True)
     def post(self):
         id_ = get_jwt_identity()
-        res = make_response(coach_schema.dump(current_user), 200)
+        res = coach_schema.dump(current_user)
         access_token = create_access_token(identity=id_)
-        set_access_cookies(res, access_token)
-        return res
+        return {
+            "coach": res,
+            "jwt_token": access_token
+        }

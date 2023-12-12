@@ -20,7 +20,7 @@ class Athlete(db.Model, SerializerMixin):
   weight = db.Column(db.String, nullable=False)
   gender = db.Column(db.String, nullable=True)
   stance= db.Column(db.String, nullable=True)
-  boot_size = db.Column(db.Integer, nullable=False)
+  boot_size = db.Column(db.String, nullable=False)
   discipline = db.Column(db.String, nullable=False)
   
   profile_picture = db.Column(db.String, nullable=True)
@@ -86,11 +86,11 @@ class Athlete(db.Model, SerializerMixin):
   def validate_boot_size(self, _, value):
       if not value:
         raise AssertionError("Athlete boot size is required")
-      elif not isinstance(value, int):
+      elif not isinstance(value, str):
         raise Exception('Boot size must be a ingeter.')
-      elif value < 1:
+      elif len(value) < 1:
         raise ValueError("Boot size must be atleast 2 characters")
-      elif value > 15:
+      elif len(value) > 15:
         raise ValueError("Boot size cannot be more than 10 characters")
       return value
     

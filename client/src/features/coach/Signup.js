@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect,useCallback } from 'react';
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import AlertBar from './AlertBar'
-import Head from "./Header";
+import AlertBar from '../../components/AlertBar'
+import Head from "../../components/Header";
 import { Button, Checkbox, Form } from 'semantic-ui-react'
 
 const Signup = () => {
@@ -69,6 +69,7 @@ const Signup = () => {
               res.json().then(resObj => {
                 updateCoach(resObj.coach)
                 localStorage.setItem("jwt_token", resObj.token)
+                localStorage.setItem("refresh_token", resObj.refresh_token)
               })
               navigate('/userhome');
           } else {

@@ -14,5 +14,5 @@ class CoachSchema(ma.SQLAlchemySchema):
   bio = fields.String(required=False, validate=validate.Length(min=5, max=500))
   team = fields.String(required=False, validate=validate.Length(min=2, max=25))
   is_member = fields.Boolean(required=False)
-  athletes = fields.List(fields.Nested("AthleteSchema", only=("name", "age", "height", "weight", "gender", "stance", "discipline", "profile_picture", "boot_size", "equipment", "athlete_services"), dump_only=True))
+  athletes = fields.List(fields.Nested("AthleteSchema", only=( "id", "name", "age", "height", "weight", "gender", "stance", "discipline", "profile_picture", "boot_size", "equipment", "athlete_services"), dump_only=True))
   appointments = fields.List(fields.Nested("AppointmentSchema", only=("booking_time", "athlete_services"), dump_only=True))
