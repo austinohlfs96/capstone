@@ -12,7 +12,7 @@ from werkzeug.exceptions import NotFound
 
 
 from models.coaches import Coach
-
+from routes.auth.check_token import CheckToken
 from routes.service import Services
 from routes.athlete import Athletes
 from routes.athlete_by_id import AthleteById
@@ -30,9 +30,12 @@ from routes.auth.me import Me
 from routes.auth.refresh import Refresh
 from routes.auth.register import Register
 
+
+
+api.add_resource(CheckToken, "/auth/check")
+api.add_resource(Me, "/auth/me")
 api.add_resource(Login, "/auth/login")
 api.add_resource(Logout, "/auth/logout")
-api.add_resource(Me, "/auth/me")
 api.add_resource(Refresh, "/auth/refresh")
 api.add_resource(Register, "/auth/register")
 api.add_resource(Services, '/services') 

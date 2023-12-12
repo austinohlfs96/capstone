@@ -9,11 +9,12 @@ class AthleteSchema(ma.SQLAlchemySchema):
     load_instance = True
     fields = ["id", "name", "age", "height", "weight", "gender", "stance", "discipline", "profile_picture", "boot_size", "coaches_id", "equipment", "athlete_services"]
     
+  id = fields.Integer()
   name = fields.String(required=True, validate=validate.Length(min=2, max=21))
   age = fields.Integer(required=True, validate=validate.Range(min=1, max=100))
   height = fields.String(required=True, validate=validate.Length(min=3, max=15))
   weight = fields.String(required=True, validate=validate.Length(min=2, max=15))
-  boot_size = fields.Integer(required=True, validate=validate.Range(min=2, max=15))
+  boot_size = fields.String(required=True, validate=validate.Length(min=2, max=15))
   gender = fields.String(required=False, validate=validate.Length(min=2, max=15))
   stance = fields.String(required=False, validate=validate.Length(min=2, max=15))
   discipline = fields.String(required=True, validate=validate.Length(min=2, max=40))

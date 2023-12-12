@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from flask_restful import Resource
 from flask_jwt_extended import (
     create_access_token,
@@ -29,10 +29,14 @@ class Register(Resource):
             jwt = create_access_token(identity=coach.id)
             refresh_token = create_refresh_token(identity=coach.id)
             serialized_coach = coach_schema.dump(coach)
-            res = jsonify(serialized_coach)
-            set_access_cookies(res, jwt)
-            set_refresh_cookies(res, refresh_token)
-            return serialized_coach, 201
+            return make_response(
+                {
+                    "coach": serialized_coach,
+                    "token": jwt,
+                    "refresh_token": refresh_token,
+                },
+                201,
+            )
         except (Exception, IntegrityError) as e:
             db.session.rollback()
             return {"message": str(e)}, 400
