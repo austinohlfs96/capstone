@@ -55,9 +55,30 @@ const coachSlice = createSlice({
       );
       state.errors = [];
     },
+    addAppointmentsToCoach(state, action) {
+      state.loading = false
+      state.data.appointment.push(action.payload)
+      state.errors = []
+    },
+    deleteAppointmentsToCoach(state, action) {
+      const appointmentIdToRemove = action.payload;
+      state.loading = false
+      state.data.appointment = state.data.appointment.filter(
+        (appointment) => appointment.id !== appointmentIdToRemove
+      );
+      state.errors = []
+  },
+    patchAppointment(state, action) {
+      const updatedAppointment = action.payload;
+      state.loading = false;
+      state.data.appointment = state.data.appointment.map((appointments) =>
+        appointments.id === updatedAppointment.id ? updatedAppointment : appointments
+      );
+      state.errors = [];
+  }
   }
 })
 
-export const {setCurrentCoach, logout, addErrors, clearAllErrors, patchCoach, deleteCoach, addAthleteToCoach, deleteAthleteToCoach, patchAthlete} = coachSlice.actions
+export const {setCurrentCoach, logout, addErrors, clearAllErrors, patchCoach, deleteCoach, addAthleteToCoach, deleteAthleteToCoach, patchAthlete, addAppointmentsToCoach, deleteAppointmentsToCoach, patchAppointment} = coachSlice.actions
 
 export default coachSlice.reducer

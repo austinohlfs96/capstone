@@ -6,7 +6,7 @@ class CoachSchema(ma.SQLAlchemySchema):
   class Meta:
     model = Coach
     load_instance = True
-    fields = ["id", "email", "name","_password_hash", "bio", "team", "profile_picture", "is_member", "athletes", "appointments"]
+    fields = ["id", "email", "name","_password_hash", "bio", "team", "profile_picture", "is_member", "athletes", "appointment"]
   
   id = fields.Integer()
   name = fields.String(required=True, validate=validate.Length(min=2, max=21))
@@ -15,4 +15,4 @@ class CoachSchema(ma.SQLAlchemySchema):
   team = fields.String(required=False, validate=validate.Length(min=2, max=25))
   is_member = fields.Boolean(required=False)
   athletes = fields.List(fields.Nested("AthleteSchema", only=( "id", "name", "age", "height", "weight", "gender", "stance", "discipline", "profile_picture", "boot_size", "equipment", "athlete_services"), dump_only=True))
-  appointments = fields.List(fields.Nested("AppointmentSchema", only=("booking_time", "athlete_services"), dump_only=True))
+  appointment = fields.List(fields.Nested("AppointmentSchema", only=("id", "booking_time", "athlete_services", "pickup_location", "dropoff_location"), dump_only=True))

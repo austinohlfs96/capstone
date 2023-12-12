@@ -81,56 +81,56 @@ console.log(coach)
       <Input name="age"
               placeholder="Enter athlete age"
               value={formData.age}
-              onChange={(e, { age, value }) => setFormData({ ...formData, [age]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, age: value })} />
     </Form.Field>
     <Form.Field>
       <label>Athlete Height</label>
       <Input name="height"
               placeholder="Enter athlete height"
               value={formData.height}
-              onChange={(e, { height, value }) => setFormData({ ...formData, [height]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, height: value })} />
     </Form.Field>
     <Form.Field>
       <label>Athlete Weight</label>
       <Input name="weight"
               placeholder="Enter athlete weight"
               value={formData.weight}
-              onChange={(e, { wieght, value }) => setFormData({ ...formData, [wieght]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, wieght: value })} />
     </Form.Field>
     <Form.Field>
       <label>Athlete Gender</label>
       <Input name="gender"
               placeholder="Enter athlete gender"
               value={formData.gender}
-              onChange={(e, { gender, value }) => setFormData({ ...formData, [gender]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, gender: value })} />
     </Form.Field>
     <Form.Field>
       <label>Athlete Boot Size</label>
       <Input name="boot_size"
               placeholder="Enter athlete boot size"
               value={formData.boot_size}
-              onChange={(e, { boot_size, value }) => setFormData({ ...formData, [boot_size]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, boot_size: value })} />
     </Form.Field>
     <Form.Field>
       <label>Athlete Stance</label>
       <Input name="stance"
               placeholder="Enter athlete stance"
               value={formData.stance}
-              onChange={(e, { stance, value }) => setFormData({ ...formData, [stance]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, stance: value })} />
     </Form.Field>
     <Form.Field>
       <label>Athlete DIsciplines</label>
       <Input name="discipline"
               placeholder="Enter athlete disciplines"
               value={formData.discipline}
-              onChange={(e, { discipline, value }) => setFormData({ ...formData, [discipline]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, discipline: value })} />
     </Form.Field>
     <Form.Field>
       <label>Upload Athlete Photos</label>
       <Input name="profile_picture"
               placeholder="Enter img url for picture"
               value={formData.profile_picture}
-              onChange={(e, { profile_picture, value }) => setFormData({ ...formData, [profile_picture]: value })} />
+              onChange={(e, { value }) => setFormData({ ...formData, profile_picture: value })} />
     </Form.Field>
     {/* Add more fields as needed */}
     <Button type='submit'>Save Changes</Button>

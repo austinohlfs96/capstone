@@ -7,7 +7,7 @@ class ServiceSchema(ma.SQLAlchemySchema):
     model = Service
     load_instance = True
     fields = ["id", "name", "description", "price", "average_turn_around", "is_available"]
-    
+  id = fields.Integer()
   name = fields.String(required=True, validate=validate.Length(min=2, max=25))
   description = fields.String(required=True, validate=validate.Length(min=5, max=250))
   price = fields.Float(required=True, validate=validate.Range(min=0.0, max=2000.0))

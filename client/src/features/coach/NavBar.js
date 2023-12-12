@@ -1,23 +1,22 @@
 import {useState, useEffect} from "react"
 import {useSelector} from "react-redux"
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Grid, Menu, Segment, Button, Form, Input } from 'semantic-ui-react'
+import { Grid, Menu, Segment, Button, Form, Input, Card } from 'semantic-ui-react'
 import EditCoachForm from './EditCoachForm'
 import AddAthleteForm from "../athlete/AddAthleteForm"
 import AthleteCards from "../athlete/AthleteCards"
+import BookAppointment from "../appointment/BookAppiontment";
+import CoachAppointments from "../appointment/CoachAppointments";
 
 
 
 const MenuExampleTabularOnLeft = () => {
   const navigate = useNavigate()
-  // const athlete = useSelector((state) => state.athlete.data)
+  const coach = useSelector((state) => state.coach.data)
   const location = useLocation();
   const [menuState, setMenuState] = useState({activeItem: 'athletes'})
 
   const handleItemClick = (e, { name }) => setMenuState({ activeItem: name })
-
-  
-
 
   const { activeItem } = menuState
 
@@ -29,7 +28,7 @@ const MenuExampleTabularOnLeft = () => {
     }
   }, [location.pathname]);
 
-    if (activeItem === 'book-athlete-services') {
+    if (activeItem === 'book-appointment') {
       return (
         <Grid>
         <Grid.Column width={4}>
@@ -40,8 +39,8 @@ const MenuExampleTabularOnLeft = () => {
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -65,18 +64,7 @@ const MenuExampleTabularOnLeft = () => {
 
         <Grid.Column stretched width={12}>
           <Segment>
-          <Form>
-          
-          <Form.Field>
-            <label>Username</label>
-            <Input placeholder='Enter your username' />
-          </Form.Field>
-          <Form.Field>
-            <label>Password</label>
-            <Input type='password' placeholder='Enter your password' />
-          </Form.Field>
-          <Button type='submit'>Submit</Button>
-        </Form>
+            <BookAppointment/>
           </Segment>
         </Grid.Column>
       </Grid>
@@ -94,8 +82,8 @@ const MenuExampleTabularOnLeft = () => {
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -119,8 +107,7 @@ const MenuExampleTabularOnLeft = () => {
 
         <Grid.Column stretched width={12}>
         <Segment>
-            This is an stretched grid column. This segment will always match the
-            tab height
+          <CoachAppointments/>
           </Segment>
         </Grid.Column>
       </Grid>
@@ -138,8 +125,8 @@ const MenuExampleTabularOnLeft = () => {
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -176,8 +163,8 @@ const MenuExampleTabularOnLeft = () => {
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -216,8 +203,8 @@ const MenuExampleTabularOnLeft = () => {
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item

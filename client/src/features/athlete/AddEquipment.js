@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {  useDispatch } from 'react-redux';
 import { Button, Form, Input } from 'semantic-ui-react';
 import {  patchAthlete } from '../coach/coachSlice';
+import { addEquipmentToAthlete } from './AthleteSlice';
 
 
 const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
@@ -20,7 +21,6 @@ const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
 
 
   const handleAddEquipmentFormSubmit = (athlete) => {
-    debugger
     // Make a POST request to the server
     const formDataWithoutExcludedField = { ...formData };
     delete formDataWithoutExcludedField.athlete_name;
@@ -40,6 +40,7 @@ const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
       .then((equipment) => {
         // Handle the response (you might want to update the state or perform other actions)
         console.log('Equipment added successfully:', equipment);
+        dispatch(addEquipmentToAthlete(equipment))
         dispatch(patchAthlete(athlete))
         onCloseAddEquipmentModal(); // Close the modal after submitting
       })
