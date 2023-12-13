@@ -1,7 +1,7 @@
-import React from 'react'
+
 import {useDispatch} from "react-redux"
 import { useNavigate } from 'react-router-dom';
-import { Header, Segment, Button, Image } from 'semantic-ui-react'
+import { Header, Segment, Button, Image, Sticky } from 'semantic-ui-react'
 import { useSelector } from "react-redux"
 import { logout } from '../features/coach/coachSlice'
 
@@ -10,6 +10,7 @@ function Head() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const coach = useSelector((state) => state.coach.data);
+
 
 
   const handleLogout = () => {
@@ -24,7 +25,9 @@ function Head() {
  }
   
   return (
-    <div className="App">
+    <div className="App" >
+    
+        <Sticky >
       <Segment>
     <Header as='h3' textAlign='right'>
     {!coach && (
@@ -40,19 +43,20 @@ function Head() {
   </>
 )}
     </Header>
-    <Header as='h3' textAlign='left'>
+    <Header as='h3' textAlign='left'     marginTop= '-3px'>
     <Image src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Valknut.svg/1200px-Valknut.svg.png' size='small' />
       Æsir Performance Tunes
     </Header>
-    <Header as='h3' textAlign='justified'>
+    <Header as='h3' textAlign='center' marginTop= '10px'>
     <Button secondary onClick={() => navigate('/')}>About</Button>
     <Button secondary onClick={() => navigate('/services')}>Services</Button>
     <Button secondary>Gallery</Button>
     <Button secondary>Rider Spotlight</Button>
-    <Button secondary>Contact Us</Button>
+    <Button secondary onClick={() => navigate('/contact')}>Contact Us</Button>
     
     </Header>
   </Segment>
+  </Sticky>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, Image, Button, Modal } from 'semantic-ui-react';
+import { Card, Image, Button, Modal, Grid, Header, Dropdown } from 'semantic-ui-react';
 import { deleteAthleteToCoach } from '../coach/coachSlice';
 import {setCurrentAthlete} from "./AthleteSlice"
 import EditAthlete from './EditAthlete'
@@ -12,9 +12,15 @@ const AthleteCards = () => {
   const navigate = useNavigate();
   const coach = useSelector((state) => state.coach.data);
   const [athlete, setAthlete] = useState(null)
+  const [selectedAthlete, setSelectedAthlete] = useState(null);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [addEquipmentModalOpen, setAddEquipmentModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('equipment');
+
+  const handleCategoryChange = (e, { value }) => {
+    setSelectedCategory(value);
+  };
   
 
 console.log(coach)
@@ -50,21 +56,24 @@ console.log(coach)
       });
   };
 
-  const handleEditAthlete = (athlete) => {
-    setAthlete(athlete)
+  const handleEditAthlete = (athlete, event) => {
+    event.stopPropagation(); // Stop the click event from reaching the card
+    setAthlete(athlete);
     dispatch(setCurrentAthlete(athlete));
     setEditModalOpen(true);
   };
-
   const onClose = () => {
     setEditModalOpen(false)
   }
 
-  const handleAddEquipment = (athlete) => {
-    setAthlete(athlete)
-    dispatch(setCurrentAthlete(athlete))
+  const handleAddEquipment = (athlete, event) => {
+    event.stopPropagation(); // Stop the click event from reaching the card
+    setAthlete(athlete);
+    dispatch(setCurrentAthlete(athlete));
     setAddEquipmentModalOpen(true);
   };
+  
+  
 
   const onCloseAddEquipmentModal = () => {
     setAddEquipmentModalOpen(false);
@@ -74,7 +83,7 @@ console.log(coach)
     <>
     <Card.Group>
       {coachAthletes.map((athlete) => (
-        <Card key={athlete.id}>
+        <Card key={athlete.id} onClick={() => setSelectedAthlete(athlete)}>
           <Image src={athlete.profile_picture} wrapped ui={false} size='small'/>
           
           <Card.Content>
@@ -90,15 +99,85 @@ console.log(coach)
             <Card.Description>{`Peices of equipment: ${athlete.equipment ? athlete.equipment.length : 0}`}
             </Card.Description>
             <Card.Description>{`Gender: ${athlete.gender}`}</Card.Description>
-            <Card.Description>{`Height: ${athlete.height}, Weight: ${athlete.weight}`}</Card.Description>
-            <Card.Description>{`Boot Size: ${athlete.height}, Stance: ${athlete.stance}`}</Card.Description>
+            <Card.Description>{`Height: ${athlete.height}`}</Card.Description>
+            <Card.Description>{`Weight: ${athlete.weight}`}</Card.Description>
+            <Card.Description>{`Boot Size: ${athlete.boot_size}`}</Card.Description>
+            <Card.Description>{`Stance: ${athlete.stance}`}</Card.Description>
             <Card.Description>{`Disciplines: ${athlete.discipline}`}</Card.Description>
-            <Button onClick={() => handleAddEquipment(athlete)}>Add Equipment</Button>
-            <Button type='submit' onClick={() => handleEditAthlete(athlete)}>Edit Athlete</Button>
+            <Button onClick={(event) => handleAddEquipment(athlete, event)}>Add Equipment</Button>
+            <Button type='submit' onClick={(event) => handleEditAthlete(athlete, event)}>Edit Athlete</Button>
           </Card.Content>
         </Card>
       ))}
     </Card.Group>
+
+    <Modal open={!!selectedAthlete} size='small' onClose={() => setSelectedAthlete(null)}>
+  <Modal.Header>{selectedAthlete?.name}</Modal.Header>
+  <Modal.Content>
+    <Grid columns={3} stackable>
+      <Grid.Column>
+        <Image src={selectedAthlete?.profile_picture} wrapped ui={true} size='small' />
+      </Grid.Column>
+      <Grid.Column>
+        <Card.Meta>
+          <span className='date'>{`Age: ${selectedAthlete?.age}`}</span>
+        </Card.Meta>
+        <Card.Description>{`Gender: ${selectedAthlete?.gender}`}</Card.Description>
+        <Card.Description>{`Height: ${selectedAthlete?.height}`}</Card.Description>
+        <Card.Description>{`Weight: ${selectedAthlete?.weight}`}</Card.Description>
+        <Card.Description>{`Boot Size: ${selectedAthlete?.boot_size}`}</Card.Description>
+        <Card.Description>{`Stance: ${selectedAthlete?.stance}`}</Card.Description>
+        <Card.Description>{`Disciplines: ${selectedAthlete?.discipline}`}</Card.Description>
+      </Grid.Column>
+    </Grid>
+    <Dropdown
+      placeholder='Select Category'
+      selection
+      options={[
+        { key: 'equipment', text: 'Equipment', value: 'equipment' },
+        { key: 'services', text: 'Services', value: 'services' },
+      ]}
+      onChange={handleCategoryChange}
+      value={selectedCategory}
+    />
+    <div style={{ maxHeight: '400px', overflowY: 'scroll' }}>
+      {selectedCategory === 'equipment' && (
+        <Card.Group>
+          {selectedAthlete?.equipment.map((item) => (
+            <Card key={item.id}>
+              <Card.Content>
+                <Card.Header>{item.type}</Card.Header>
+                <Card.Description>{`Manifacturer: ${item.manifacture}`}</Card.Description>
+                <Card.Description>{`Model: ${item.model}`}</Card.Description>
+                <Card.Description>{`Year: ${item.year}`}</Card.Description>
+                <Card.Description>{`Lenght: ${item.lenght}`}</Card.Description>
+                <Card.Description>{`Width: ${item.width}`}</Card.Description>
+              </Card.Content>
+            </Card>
+          ))}
+        </Card.Group>
+      )}
+      {selectedCategory === 'services' && (
+        <Card.Group>
+          {selectedAthlete?.athlete_services.map((service) => (
+            <Card key={service.id}>
+              <Card.Content>
+                <Card.Header>{service.services.name}</Card.Header>
+                <Card.Meta>{service.equipment.manifacture}: {service.equipment.model}</Card.Meta>
+                <Card.Meta>Tuned for: {service.discipline}</Card.Meta>
+                <Card.Meta>Technician Notes: {service.technicain_notes}</Card.Meta>
+                <Card.Description>Notes: {service.notes}</Card.Description>
+                <Card.Description>Review: {service.reviews}</Card.Description>
+                {/* Add more details as needed */}
+              </Card.Content>
+            </Card>
+          ))}
+        </Card.Group>
+      )}
+    </div>
+  </Modal.Content>
+</Modal>
+
 
     <Modal open={editModalOpen}  size='small'>
         <Modal.Header>Edit Athlete</Modal.Header>
@@ -109,8 +188,6 @@ console.log(coach)
       </Modal>
 
       <Modal open={addEquipmentModalOpen} size="small">
-        {/* Content for Add Equipment Modal */}
-        {/* Add your form or any content for adding equipment */}
         <Modal.Header>Add Equipment</Modal.Header>
         <Modal.Content>
           <AddEquipment onCloseAddEquipmentModal={onCloseAddEquipmentModal} athlete={athlete}/>

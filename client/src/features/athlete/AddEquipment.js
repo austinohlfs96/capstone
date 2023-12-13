@@ -20,7 +20,7 @@ const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
   });
 
 
-  const handleAddEquipmentFormSubmit = (athlete) => {
+  const handleAddEquipmentFormSubmit = () => {
     // Make a POST request to the server
     const formDataWithoutExcludedField = { ...formData };
     delete formDataWithoutExcludedField.athlete_name;
@@ -38,10 +38,12 @@ const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
         return res.json();
       })
       .then((equipment) => {
-        // Handle the response (you might want to update the state or perform other actions)
+        const updatedAthlete = {
+          ...athlete,
+          equipment: [...athlete.equipment, equipment],
+        };
         console.log('Equipment added successfully:', equipment);
-        dispatch(addEquipmentToAthlete(equipment))
-        dispatch(patchAthlete(athlete))
+        dispatch(patchAthlete(updatedAthlete));
         onCloseAddEquipmentModal(); // Close the modal after submitting
       })
       .catch((error) => {

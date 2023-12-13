@@ -53,7 +53,6 @@ const coachSlice = createSlice({
       state.data.athletes = state.data.athletes.map((athlete) =>
         athlete.id === updatedAthlete.id ? updatedAthlete : athlete
       );
-      state.errors = [];
     },
     addAppointmentsToCoach(state, action) {
       state.loading = false
@@ -71,14 +70,33 @@ const coachSlice = createSlice({
     patchAppointment(state, action) {
       const updatedAppointment = action.payload;
       state.loading = false;
-      state.data.appointment = state.data.appointment.map((appointments) =>
-        appointments.id === updatedAppointment.id ? updatedAppointment : appointments
+      state.data.appointment = state.data.appointment.map((appointment) =>
+        appointment.id === updatedAppointment.id ? updatedAppointment : appointment
       );
       state.errors = [];
-  }
-  }
-})
+  },
+  patchAppointmentsAthleteServices(state, action) {
+    debugger
+    const { appointmentId, updatedAthleteServices } = action.payload;
+    state.loading = false;
 
-export const {setCurrentCoach, logout, addErrors, clearAllErrors, patchCoach, deleteCoach, addAthleteToCoach, deleteAthleteToCoach, patchAthlete, addAppointmentsToCoach, deleteAppointmentsToCoach, patchAppointment} = coachSlice.actions
+    // Find the appointment in the data array
+    const appointmentToUpdate = state.data.appointment.find(
+      (appointment) => appointment.id === appointmentId
+    );
+
+    if (appointmentToUpdate) {
+      // Update the athlete services within the appointment
+      appointmentToUpdate.athlete_services = updatedAthleteServices;
+    }
+
+    state.errors = [];
+  },
+},
+});
+  
+ 
+
+export const {setCurrentCoach, logout, addErrors, clearAllErrors, patchCoach, deleteCoach, addAthleteToCoach, deleteAthleteToCoach, patchAthlete, addAppointmentsToCoach, deleteAppointmentsToCoach, patchAppointment, patchAppointmentsAthleteServices} = coachSlice.actions
 
 export default coachSlice.reducer

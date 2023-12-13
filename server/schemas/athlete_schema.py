@@ -21,4 +21,4 @@ class AthleteSchema(ma.SQLAlchemySchema):
   profile_picture = fields.String(required=False)
   coaches_id_id = fields.Integer(required=True)
   equipment = fields.List(fields.Nested("EquipmentSchema", only=("id", "type", "manifacture", "model", "year", "length", "width"), dump_only=True))
-  athlete_services = fields.List(fields.Nested("AthleteServiceSchema", only=("discipline", "notes", "technician_notes", "reviews", "services", "created_at", "updated_at"), dump_only=True))
+  athlete_services = fields.List(fields.Nested("AthleteServiceSchema", only=("discipline", "notes", "technician_notes", "reviews", "services", "created_at", "updated_at", "equipment"), dump_only=True))

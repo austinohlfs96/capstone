@@ -17,12 +17,25 @@ const appointmentSlice = createSlice({
     },
     addServiceToAppointment(state, action) {
       state.loading = false
-      state.data.athlete_services.push(action.payload)
+      state.data.athlete_services = [...state.data.athlete_services, action.payload];
       state.errors = []
+    },
+    patchAthleteService(state, action) {
+      console.log('Action payload:', action.payload);
+      debugger
+      const updatedAthleteService = action.payload;
+      console.log('Updated athlete service:', updatedAthleteService);
+      debugger
+      state.loading = false;
+      state.data.athlete_services = state.data.athlete_services.map((service) =>
+        service.id === updatedAthleteService.id ? updatedAthleteService : service
+      );
+    
+      console.log('State after update:', state);
     },
   }
 })
 
-export const {setCurrentAppointment, addServiceToAppointment} = appointmentSlice.actions
+export const {setCurrentAppointment, addServiceToAppointment, patchAthleteService} = appointmentSlice.actions
 
 export default appointmentSlice.reducer

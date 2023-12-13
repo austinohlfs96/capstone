@@ -5,7 +5,7 @@ import Login from '../features/coach/Login';
 import Error from './Error';
 import UserHome from '../features/coach/UserHome';
 import Services from "./Services";
-import EditAthlete from "../features/athlete/EditAthlete";
+import Contact from "./Contact";
 
 
 function Router() {
@@ -16,7 +16,8 @@ function Router() {
       <Route path='/signup' element={<Signup/>} />,
       <Route path='/userhome' element={<UserHome/>} />,
       <Route path='/services' element={<Services/>} />,
-      <Route path="/editathlete" element={<EditAthlete/>}/>,
+      <Route path='/contact' element={<Contact/>}/>,
+      
 
     </>
   )

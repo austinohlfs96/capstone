@@ -4,7 +4,7 @@ import { Button, Form, Input, Modal, Dropdown } from 'semantic-ui-react';
 import { addServiceToAppointment } from './appointmentSlice';
 import { patchAppointment, patchCoach } from '../coach/coachSlice';
 
-const AddAthleteServiceForm = ({appointment, handleModalClose}) => {
+const AddAthleteServiceForm = ({appointment, handleModalClose, setAppointment}) => {
   const dispatch = useDispatch()
   const [athlete, setAthlete] = useState({})
   const coach = useSelector((state) => state.coach.data);
@@ -62,31 +62,7 @@ const AddAthleteServiceForm = ({appointment, handleModalClose}) => {
     notes: '',
   });
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     const response = await fetch('http://127.0.0.1:5555/athlete-services', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to submit athlete service');
-  //     }
-      
-
-  //     console.log('Athlete service submitted successfully');
-  //     // dispatch(addServiceToAppointment(formData))
-  //     dispatch(patchAppointment(formData))
-  //     handleModalClose()
-  //   } catch (error) {
-  //     console.error('Error submitting athlete service:', error.message);
-  //   }
-  // };
-
-  const handleSubmit = () => {
+  const handleSubmit = (formData) => {
     // Make a POST request to the server
     fetch('http://127.0.0.1:5555/athlete-services', {
       method: "POST",
@@ -102,12 +78,15 @@ const AddAthleteServiceForm = ({appointment, handleModalClose}) => {
         return res.json();
       })
      
-      .then((service) => {
-        console.log('Equipment added successfully:', service);
-        dispatch(addServiceToAppointment(service))
-        dispatch(patchAppointment(appointment))
+      .then((newService) => {
+        const updateAppointment = {
+          ...appointment,
+          athlete_services: [...appointment.athlete_services, newService],
+        };
+        dispatch(patchAppointment(updateAppointment))
         // dispatch(patchCoach(coach))
-        console.log(appointment)
+        setAppointment(updateAppointment)
+        console.log('TEST6', updateAppointment)
         handleModalClose()
         // You can add logic here to handle the successful creation of the appointment
       })
@@ -115,12 +94,25 @@ const AddAthleteServiceForm = ({appointment, handleModalClose}) => {
         console.error("Error creating appointment:", error.message);
       });
   };
-  
 
 
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={(e) => {
+      e.preventDefault()
+      handleSubmit(formData)}
+      }>
+      {/* <Form.Field>
+      <label>Appointment ID</label>
+      <Input
+        name="appointment_id"
+        placeholder="Enter equipment notes"
+        value={formData.appointment_id}
+        onChange={(e, { appointment_id, value }) =>
+          setFormData({ ...formData, [appointment_id]: value })
+        }
+      />
+    </Form.Field> */}
       <label>Athlete</label>
       <Form.Field>
       <Dropdown
