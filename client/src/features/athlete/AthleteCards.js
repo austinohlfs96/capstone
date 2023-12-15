@@ -1,11 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Image, Button, Modal, Grid, Header, Dropdown } from 'semantic-ui-react';
-import { deleteAthleteToCoach } from '../coach/coachSlice';
+import { deleteAthleteToCoach, fetchCurrentUser } from '../coach/coachSlice';
 import {setCurrentAthlete} from "./AthleteSlice"
+import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { getToken } from '../../utils/main';
+import { checkToken } from '../../utils/main';
 import EditAthlete from './EditAthlete'
 import AddEquipment from './AddEquipment';
+
 
 const AthleteCards = () => {
   const dispatch = useDispatch();
@@ -13,48 +17,65 @@ const AthleteCards = () => {
   const coach = useSelector((state) => state.coach.data);
   const [athlete, setAthlete] = useState(null)
   const [selectedAthlete, setSelectedAthlete] = useState(null);
-
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [addEquipmentModalOpen, setAddEquipmentModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('equipment');
-
   const handleCategoryChange = (e, { value }) => {
     setSelectedCategory(value);
   };
-  
+  const { addToast } = useToasts();
+  const handleNewError = useCallback((error) => {
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
 
-console.log(coach)
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+  
   if (!coach || !coach.athletes) {
     return null;
   }
 
+
+
   const coachAthletes = coach.athletes;
   console.log(coachAthletes)
 
-  const handleRemoveAthlete = (athleteId) => {
+  const handleRemoveAthlete = (e,athleteId) => {
+    e.stopPropagation();
     // Make a delete request to your server
-    fetch(`http://127.0.0.1:5555/athlete/${athleteId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        // Add any other headers needed (e.g., authentication token)
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to delete athlete');
-        }
-        return response.json();
+    if (!getToken() || !checkToken()) {
+      handleNewError('User not logged in');
+      navigate('/login')
+      // Handle the case where the user is not logged in (redirect, show a message, etc.)
+      return;
+    }
+  
+    e.stopPropagation();
+      // Make a delete request to your server
+      fetch(`http://127.0.0.1:5555/athlete/${athleteId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other headers needed (e.g., authentication token)
+        },
       })
-      .then(() => {
-        // Dispatch a Redux action to update the state
-        dispatch(deleteAthleteToCoach(athleteId));
-      })
-      .catch((error) => {
-        console.error(error);
-        // Handle error as needed
-      });
-  };
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to delete athlete');
+          }
+          return response.json();
+        })
+        .then(() => {
+          // Dispatch a Redux action to update the state
+          dispatch(deleteAthleteToCoach(athleteId));
+        })
+        .catch((error) => {
+          console.error(error);
+          // Handle error as needed
+        });
+    };
+  
 
   const handleEditAthlete = (athlete, event) => {
     event.stopPropagation(); // Stop the click event from reaching the card
@@ -81,6 +102,7 @@ console.log(coach)
 
   return (
     <>
+    {/* <Modal.Header><h1>Athletes</h1></Modal.Header> */}
     <Card.Group>
       {coachAthletes.map((athlete) => (
         <Card key={athlete.id} onClick={() => setSelectedAthlete(athlete)}>
@@ -88,7 +110,7 @@ console.log(coach)
           
           <Card.Content>
           <Button secondary style={{ position: 'absolute', top: '5px', right: '5px' }}
-          onClick={() => handleRemoveAthlete(athlete.id)}
+          onClick={(e) => handleRemoveAthlete(e, athlete.id)}
           >
           X
         </Button>
@@ -183,7 +205,6 @@ console.log(coach)
         <Modal.Header>Edit Athlete</Modal.Header>
         <Modal.Content>
           <EditAthlete athlete={athlete} onClose={onClose}/>
-          
         </Modal.Content>
       </Modal>
 

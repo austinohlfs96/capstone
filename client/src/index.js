@@ -6,17 +6,26 @@ import 'semantic-ui-css/semantic.min.css';
 import { BrowserRouter as Router} from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from  "./app/store"
-
+import { ToastProvider, useToasts } from 'react-toast-notifications';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
   <Provider store={store}>
-    <Router>
-    <App/>
-    </Router>
+    <ToastProvider>
+      <style>
+        {`
+          .react-toast-notifications__container {
+            z-index: 100000 !important;
+          }
+        `}
+      </style>
+      <Router>
+        <App />
+      </Router>
+    </ToastProvider>
   </Provider>
-)
+);
 // ReactDOM.createRoot(document.getElementById("root")).render(
 //   <Provider store={store}>
 //     <BrowserRouter>

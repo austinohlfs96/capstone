@@ -15,6 +15,10 @@ const appointmentSlice = createSlice({
       debugger
       state.data = action.payload
     },
+    patchAppointments(state, action) {
+      state.loading = false
+      state.data = action.payload
+    },
     addServiceToAppointment(state, action) {
       state.loading = false
       state.data.athlete_services = [...state.data.athlete_services, action.payload];
@@ -36,6 +40,6 @@ const appointmentSlice = createSlice({
   }
 })
 
-export const {setCurrentAppointment, addServiceToAppointment, patchAthleteService} = appointmentSlice.actions
+export const {setCurrentAppointment, addServiceToAppointment, patchAthleteService, patchAppointments} = appointmentSlice.actions
 
 export default appointmentSlice.reducer

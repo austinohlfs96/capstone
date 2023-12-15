@@ -31,7 +31,7 @@ class Appointment(db.Model, SerializerMixin):
       raise AssertionError("Pick up location is required")
     elif not isinstance(value, str):
       raise Exception('Pick up location must be a string.')
-    elif len(value) < 2:
+    elif len(value.strip()) < 2:
       raise ValueError("Pick up location must be more than 2 characters")
     return value
   
@@ -41,7 +41,7 @@ class Appointment(db.Model, SerializerMixin):
       raise AssertionError("Drop off location is required")
     elif not isinstance(value, str):
       raise Exception('Drop off location must be a string.')
-    elif len(value) < 2:
+    elif len(value.strip()) < 2:
       raise ValueError("Drop off location must be more than 2 characters")
     return value
   
@@ -51,7 +51,7 @@ class Appointment(db.Model, SerializerMixin):
       raise AssertionError("booking time is required")
     elif not isinstance(value, str):
       raise Exception('Booking time must be a string.')
-    elif len(value) < 2:
+    elif len(value.strip()) < 2:
       raise ValueError("Booking time must be more than 2 characters")
     return value
   

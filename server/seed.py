@@ -52,7 +52,7 @@ if __name__ == '__main__':
             weight = "145lbs",
             gender = "male",
             stance = "goofy",
-            boot_size = 9,
+            boot_size = '9',
             discipline = "halfpipe",
             coaches_id = 1
             
@@ -66,7 +66,7 @@ if __name__ == '__main__':
             weight = "155lbs",
             gender = "male",
             stance = "goofy",
-            boot_size = 10,
+            boot_size = '10',
             discipline = "Boarder-cross, slope-style",
             coaches_id = 1
             
@@ -80,7 +80,7 @@ if __name__ == '__main__':
             weight = "115lbs",
             gender = "female",
             stance = "regular",
-            boot_size = 8,
+            boot_size = '8',
             discipline = "big-mountain",
             coaches_id = 1
             
@@ -94,7 +94,7 @@ if __name__ == '__main__':
           weight = "145lbs",
           gender = "male",
           stance = "goofy",
-          boot_size = 8,
+          boot_size = '8',
           discipline = "halfpipe",
           coaches_id = 2
             
@@ -108,7 +108,7 @@ if __name__ == '__main__':
             weight = "155lbs",
             gender = "male",
             stance = "goofy",
-            boot_size = 8,
+            boot_size = '8',
             discipline = "Boarder-cross, slope-style",
             coaches_id = 2
             
@@ -122,7 +122,7 @@ if __name__ == '__main__':
             weight = "115lbs",
             gender = "female",
             stance = "regular",
-            boot_size = 8,
+            boot_size = '8',
             discipline = "Slope-style",
             coaches_id = 2
             
@@ -135,8 +135,8 @@ if __name__ == '__main__':
             manifacture = "Burton",
             model = "Custom",
             year = 2022,
-            length = 155.0,
-            width = 26.5,
+            length = '155.0',
+            width = '26.5',
             athlete_id = 1
             
         )
@@ -147,8 +147,8 @@ if __name__ == '__main__':
             manifacture = "NeverSummer",
             model = "Proto",
             year = 2022,
-            length = 160.0,
-            width = 28.5,
+            length = '160.0',
+            width = '28.5',
             athlete_id = 2
             
         )
@@ -159,8 +159,8 @@ if __name__ == '__main__':
             manifacture = "K2",
             model = "Mindbender",
             year = 2022,
-            length = 182.5,
-            width = 100.5,
+            length = '182.5',
+            width = '100.5',
             athlete_id = 4
             
         )

@@ -22,7 +22,7 @@ class CoachById(Resource):
             try:
                 data = request.json
                 coach_schema.validate(data)
-                coach = coach_schema.load(data, instance=coach, partial=True)
+                coach = coach_schema.load(data, instance=coach, partial=('profile_picture' in data))
                 db.session.commit()
                 return coach_schema.dump(coach)
             except Exception as e:

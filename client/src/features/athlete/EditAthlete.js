@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Image, Button, Modal, Form, Input } from 'semantic-ui-react';
-import { deleteAthleteToCoach, patchAthlete } from '../coach/coachSlice';
+import { deleteAthleteToCoach, patchAthlete, addError, fetchCurrentUser} from '../coach/coachSlice';
+import { getToken, checkToken } from '../../utils/main';
 import {setCurrentAthlete} from "./AthleteSlice"
+import { ToastProvider, useToasts } from 'react-toast-notifications';
 
 
 
@@ -12,7 +14,14 @@ const EditAthlete = ({ athlete, onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const coach = useSelector((state) => state.coach.data);
-  
+  const { addToast } = useToasts();
+  const handleNewError = useCallback((error) => {
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
   
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -30,10 +39,15 @@ const EditAthlete = ({ athlete, onClose }) => {
   });
   console.log(coach)
 
-  
+  const sendRequest = () => {
+    // Check if the user is logged in before making the PATCH request
+    if (!getToken() || !checkToken()) {
+      handleNewError('User not logged in');
+      // Handle the case where the user is not logged in (redirect, show a message, etc.)
+      return;
+    }
 
-  
-  const handleEditFormSubmit = () => {
+    // Perform PATCH request to update coach on the backend
     fetch(`http://127.0.0.1:5555/athlete/${athlete.id}`, {
       method: 'PATCH',
       headers: {
@@ -41,22 +55,48 @@ const EditAthlete = ({ athlete, onClose }) => {
       },
       body: JSON.stringify(formData),
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to update athlete');
-        }
-        return res.json();
+    .then(res => {
+      if (res.ok) {
+          res.json().then(athlete => {
+            dispatch(patchAthlete(athlete));
+            onClose();
+          })
+      } else {
+          res.json().then(errorObj => {
+            console.log("error", errorObj)
+          // dispatch(addError(errorObj.message));
+          handleNewError(errorObj.message);
+        });
+      }
       })
-      .then((athlete) => {
-        // Dispatch an action to update the Redux store with the new coach data
-        dispatch(patchAthlete(athlete));
-        onClose();
-        
-      })
-      .catch((error) => {
-        console.error('Error updating coach:', error.message);
-      });
-  };
+    };
+
+  
+  const handleEditFormSubmit = () => {
+    sendRequest()
+    // fetch(`http://127.0.0.1:5555/athlete/${athlete.id}`, {
+    //   method: 'PATCH',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(formData),
+    // })
+    // .then(res => {
+    //   if (res.ok) {
+    //       res.json().then(athlete => {
+    //         dispatch(patchAthlete(athlete));
+    //         onClose();
+    //       })
+    //   } else {
+    //       res.json().then(errorObj => {
+    //         console.log("error", errorObj)
+    //       // dispatch(addError(errorObj.message));
+    //       handleNewError(errorObj.message);
+    //     });
+    //   }
+    //   })
+    }
+ 
 
 
 
@@ -64,16 +104,16 @@ const EditAthlete = ({ athlete, onClose }) => {
 console.log(coach)
   const title = 'USER HOME'
   return (
-    
-    <Form onSubmit={() => handleEditFormSubmit(formData.id)}>
-    {/* Render your form fields here */}
+   
+    <Form onSubmit={() => handleEditFormSubmit(formData)}>
+   
     <Form.Field>
       <label>Athlete Name</label>
       <Input
         name='name'
         placeholder='Enter athlete name'
         value={formData.name}
-        onChange={(e, { name, value }) => setFormData({ ...formData, [name]: value })}
+        onChange={(e, { value }) => setFormData({ ...formData, name: value })}
       />
     </Form.Field>
     <Form.Field>
@@ -135,9 +175,13 @@ console.log(coach)
     {/* Add more fields as needed */}
     <Button type='submit'>Save Changes</Button>
     <Button onClick={onClose}>Close</Button>
-  </Form> 
+  </Form>
+  
+  
 
   )
 }
+
+
 
 export default EditAthlete;

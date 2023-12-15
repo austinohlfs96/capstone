@@ -38,9 +38,9 @@ class AthleteService(db.Model, SerializerMixin):
         raise AssertionError("Athlete discipline is required")
       elif not isinstance(value, str):
         raise Exception('Disipline must be a string.')
-      elif len(value) < 2:
+      elif len(value.strip()) < 2:
         raise ValueError("Disipline size must be atleast 2 characters")
-      elif len(value) > 40:
+      elif len(value.strip()) > 40:
         raise ValueError("Disipline size cannot be more than 40 characters")
       return value
   
@@ -50,9 +50,9 @@ class AthleteService(db.Model, SerializerMixin):
       return value
     elif not isinstance(value, str):
       raise Exception('Notes must be a string.')
-    elif len(value) < 0:
+    elif len(value.strip()) < 2:
       raise ValueError("Notes must be more than 5 characters")
-    elif len(value) >= 500:
+    elif len(value.strip()) >= 500:
       raise ValueError("Notes must be less than 250 characters")
     return value
     
@@ -74,9 +74,9 @@ class AthleteService(db.Model, SerializerMixin):
       return value
     if not isinstance(value, str):
       raise Exception('Reviews must be a string.')
-    elif len(value) < 0:
+    elif len(value.strip()) < 0:
       raise ValueError("Reviews must be more than 5 characters")
-    elif len(value) >= 500:
+    elif len(value.strip()) >= 500:
       raise ValueError("Reviews must be less than 250 characters")
     return value
   

@@ -14,7 +14,7 @@ class AthleteSchema(ma.SQLAlchemySchema):
   age = fields.Integer(required=True, validate=validate.Range(min=1, max=100))
   height = fields.String(required=True, validate=validate.Length(min=3, max=15))
   weight = fields.String(required=True, validate=validate.Length(min=2, max=15))
-  boot_size = fields.String(required=True, validate=validate.Length(min=2, max=15))
+  boot_size = fields.String(required=True, validate=validate.Length(min=1, max=15))
   gender = fields.String(required=False, validate=validate.Length(min=2, max=15))
   stance = fields.String(required=False, validate=validate.Length(min=2, max=15))
   discipline = fields.String(required=True, validate=validate.Length(min=2, max=40))

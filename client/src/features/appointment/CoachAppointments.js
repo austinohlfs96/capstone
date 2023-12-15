@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react"
 import {useSelector, useDispatch } from "react-redux"
 import { Card, Button, Modal, Form, TextArea } from 'semantic-ui-react'
-import { deleteAppointmentsToCoach, patchAppointmentsAthleteServices, patchAppointment } from '../coach/coachSlice';
+import { deleteAppointmentsToCoach, patchAppointmentsAthleteServices, patchAppointment, patchAthlete } from '../coach/coachSlice';
 import { setCurrentAppointment, patchAthleteService} from "./appointmentSlice";
 import {  } from "./athleteServiceSlice";
 
@@ -15,13 +15,15 @@ const CoachAppointments = () => {
   const [reviewText, setReviewText] = useState('');
   const [showReviewField, setShowReviewField] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const selectedAppointmentId = selectedAppointment.id
+
+  
+  
 
 
 
-  const handleRemoveAppointment = (event,appointmentId) => {
+  const handleRemoveAppointment = (event,appointment) => {
     event.stopPropagation();
-    fetch(`http://127.0.0.1:5555/appointment/${appointmentId}`, {
+    fetch(`http://127.0.0.1:5555/appointment/${appointment.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -36,13 +38,43 @@ const CoachAppointments = () => {
       })
       .then(() => {
         // Dispatch a Redux action to update the state
-        dispatch(deleteAppointmentsToCoach(appointmentId));
+        dispatch(deleteAppointmentsToCoach(appointment.id));
+        const athleteIds = appointment.athlete_services.map((service) => service.athletes.id);
+        athleteIds.forEach((athleteId) => {
+          fetch(`http://127.0.0.1:5555/athlete/${athleteId}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Failed to fetch athlete data');
+              }
+              return response.json();
+            })
+            .then((athleteData) => {
+              const updatedAthleteServices = athleteData.athlete_services.filter(
+                (service) => !appointment.athlete_services.find((appService) => appService.id === service.id)
+              );
+
+              // Update the athlete's athlete services
+              dispatch(patchAthlete({
+                ...athleteData,
+                athlete_services: updatedAthleteServices,
+              }));
+            })
+            .catch((error) => {
+              console.error('Error updating athlete services:', error.message);
+              // Handle the error, e.g., display an error message
+            });
+        });
       })
       .catch((error) => {
-        console.error(error);
-        // Handle error as needed
+        console.error('Error deleting appointment:', error.message);
+        // Handle the error, e.g., display an error message
       });
-  };
+  }
+  // .catch((error) => {
+  //   console.error('Error fetching appointment data:', error.message);
+  //   // Handle the error, e.g., display an error message
+  // }
+
 
   const handleCardClick = (appointment) => {
     setSelectedAppointment(appointment);
@@ -61,7 +93,6 @@ const CoachAppointments = () => {
   };
 
   const handleReviewSubmit = () => {
-    // Send a PATCH request to update the athlete service with the review
     if (selectedService) {
       fetch(`http://127.0.0.1:5555/athlete-service/${selectedService.id}`, {
         method: 'PATCH',
@@ -77,10 +108,15 @@ const CoachAppointments = () => {
           }
           return response.json();
         })
-        .then((updateService) => {
-         
-          dispatch(patchAppointmentsAthleteServices(selectedAppointmentId, updateService))
-          console.log("Updated Appointment with new review:", selectedAppointmentId, updateService);
+        .then((updatedService) => {
+          const updatedAppointment = {
+            ...selectedAppointment,
+            athlete_services: selectedAppointment.athlete_services.map((service) =>
+              service.id === updatedService.id ? updatedService : service
+            ),
+          };
+          dispatch(patchAppointment(updatedAppointment))
+          console.log("Updated Appointment with new review:", updatedService);
         })
         .catch((error) => {
           console.error(error);
@@ -105,7 +141,7 @@ const CoachAppointments = () => {
           
           <Card.Content>
           <Button secondary style={{ position: 'absolute', top: '5px', right: '5px' }}
-          onClick={(event) => handleRemoveAppointment(event, appointment.id)}
+          onClick={(event) => handleRemoveAppointment(event, appointment)}
           >
           X
         </Button>

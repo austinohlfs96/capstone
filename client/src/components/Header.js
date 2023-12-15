@@ -1,16 +1,25 @@
-
+import React, { useState, useEffect, useCallback } from 'react';
 import {useDispatch} from "react-redux"
 import { useNavigate } from 'react-router-dom';
 import { Header, Segment, Button, Image, Sticky } from 'semantic-ui-react'
 import { useSelector } from "react-redux"
-import { logout } from '../features/coach/coachSlice'
+import { logout, fetchCurrentUser } from '../features/coach/coachSlice'
+// import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { getToken } from '../utils/main';
+import { checkToken } from '../utils/main';
 
 
 function Head() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const coach = useSelector((state) => state.coach.data);
-
+  // useEffect(() => {
+  //   if (!getToken() || !checkToken()) {
+  //    return !coach
+  //     // Handle the case where the user is not logged in (redirect, show a message, etc.)
+  //   }
+  //   dispatch(fetchCurrentUser());
+  // }, [dispatch]);
 
 
   const handleLogout = () => {

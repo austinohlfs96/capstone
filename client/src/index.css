@@ -17,3 +17,6 @@ code {
   margin-right: 11rem;
   margin-top: 40px;
 }
+.react-toast-notifications__container {
+  z-index: 1000; /* Adjust the value as needed */
+}

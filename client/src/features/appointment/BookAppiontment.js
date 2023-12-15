@@ -1,144 +1,215 @@
-import React, {useState} from 'react';
-import {  useDispatch, useSelector } from 'react-redux';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Input, Modal, Card, Segment } from 'semantic-ui-react';
-import { addAppointmentsToCoach, deleteAppointmentsToCoach } from '../coach/coachSlice';
+import { addAppointmentsToCoach, addError, patchAthlete, patchAppointment, fetchCurrentUser } from '../coach/coachSlice';
 import AddAthleteServiceForm from './AddAthleteServiceForm';
-
+import { useFormik } from 'formik';
+import { useToasts } from 'react-toast-notifications';
+import { getToken } from '../../utils/main';
+import { checkToken } from '../../utils/main';
+import * as Yup from 'yup';
+import ConfirmAppt from './AppointmentConfirm';
 
 const BookAppointment = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const coachId = useSelector((state) => state.coach.data.id)
-  const [appointment, setAppointment] = useState({})
-  const appointmentServices = appointment.athlete_services || []
-  const [formData, setFormData] = useState({
-    coaches_id: coachId,
-    pickup_location: '',
-    dropoff_location: '',
-    booking_time: '',
-});
+  const coach = useSelector((state) => state.coach.data);
+  const [appointment, setAppointment] = useState({});
+  const [athlete, setAthlete] = useState({});
+  const appointmentServices = appointment.athlete_services || [];
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const coachAthletes = coach.athletes;
+  const { addToast } = useToasts();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
-const [formSubmitted, setFormSubmitted] = useState(false);
-const [showModal, setShowModal] = useState(false);
+  const handleNewError = useCallback((error) => {
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
 
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
 
-const handleAppointmentFormSubmit = (formData) => {
-  // Make a POST request to the server
-  fetch("http://127.0.0.1:5555/appointments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error("Failed to create appointment");
+  const validationSchema = Yup.object().shape({
+    pickup_location: Yup.string().required('Pick-up location is required'),
+    dropoff_location: Yup.string().required('Drop-off location is required'),
+    booking_time: Yup.string().required('Booking time is required'),
+  });
+
+  const sendRequest = (values) => {
+    // Check if the user is logged in before making the PATCH request
+    if (!getToken() || !checkToken()) {
+      handleNewError('User not logged in');
+      // Handle the case where the user is not logged in (redirect, show a message, etc.)
+      return;
+    }
+
+    // Perform PATCH request to update coach on the backend
+    fetch('http://127.0.0.1:5555/appointments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+    .then(res => {
+      if (res.ok) {
+          res.json().then(createdAppointment => {
+            dispatch(addAppointmentsToCoach(createdAppointment));
+            setAppointment(createdAppointment);
+            setFormSubmitted(true);
+          })
+      } else {
+          res.json().then(errorObj => {
+          dispatch(addError(errorObj.message));
+          handleNewError(errorObj.message);
+        });
       }
-      return res.json();
+      })
+    }
+
+
+  const formik = useFormik({
+    initialValues: {
+      coaches_id: coachId,
+      pickup_location: '',
+      dropoff_location: '',
+      booking_time: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      sendRequest(values);
+    },
+  });
+  
+
+  const handleAddAthleteService = () => {
+    setShowModal(true); // Show the modal when "Add Athlete Service" is clicked
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false); // Close the modal
+  };
+
+  const handlePrePayClick = () => {
+    setShowPaymentModal(true);
+  };
+  
+  const handlePaymentModalClose = () => {
+    setShowPaymentModal(false);
+  };
+
+  const calculateTotal = () => {
+    if (appointment.athlete_services && Array.isArray(appointment.athlete_services)) {
+      return appointment.athlete_services.reduce((total, service) => total + (service.services.price || 0), 0);
+    } else {
+      return 0;
+    }
+  };
+
+  const handleDeleteService = (services) => {
+    const selectedAthlete = coachAthletes.find((athlete) => athlete.id === services.athletes.id)
+    console.log("selectedAthlete",selectedAthlete)
+    setAthlete(selectedAthlete)
+    fetch(`http://127.0.0.1:5555/athlete-service/${services.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
-    .then((createdApointment) => {
-      // Handle the response (you might want to update the state or perform other actions)
-      dispatch(addAppointmentsToCoach(createdApointment))
-      console.log("Appointment created successfully:", appointment);
-      setAppointment(createdApointment)
-      console.log('Appointment', appointment)
-      setFormSubmitted(true);
-      // You can add logic here to handle the successful creation of the appointment
-    })
-    .catch((error) => {
-      console.error("Error creating appointment:", error.message);
-    });
-};
+      .then((res) => {
+        if (res.ok) {
+          const updatedService = appointment.athlete_services.filter((service) => service.id !== services.id);
+          const updatedAthleteService = selectedAthlete.athlete_services.filter((service) => service.id !== services.id);
+          setAppointment({
+            ...appointment,
+            athlete_services: updatedService,
+          });
+          // console.log('test69', athlete)
+          dispatch(patchAppointment({
+            ...appointment,
+            athlete_services: updatedService,
+          }));
+          dispatch(patchAthlete({
+            ...selectedAthlete,
+            athlete_services: updatedAthleteService,
+          }));
+          console.log( "athlete", athlete)
+        } else {
+          // If the deletion fails, handle the error
+          res.json().then(errorObj => {
+            dispatch(addError(errorObj.message));
+            handleNewError(errorObj.message);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error deleting service:', error.message);
+        // Handle the error, e.g., display an error message
+      });
+  };
 
-const handleAddAthleteService = () => {
-  console.log("test1", appointment)
-  setShowModal(true); // Show the modal when "Add Athlete Service" is clicked
-};
-
-const handleModalClose = () => {
-  console.log("test2", appointment)
-  setShowModal(false); // Close the modal
-};
-
-const calculateTotal = () => {
-  if (appointment.athlete_services && Array.isArray(appointment.athlete_services)) {
-    return appointment.athlete_services.reduce((total, service) => total + (service.services.price || 0), 0);
-  } else {
-    return 0;
-  }
-};
-// const extractedData = appointment.athlete_services.map((service) => ({
-//   name: service.services.name,
-//   discipline: service.services.price,
-// }));
-
-// console.log(extractedData);
-
-  // const AthleteServiceCard = ({ service }) => (
-  //   <Card>
-  //     <Card.Content>
-  //       <Card.Header>{service.name}</Card.Header>
-  //       <Card.Meta>Discipline: {service.discipline}</Card.Meta>
-  //       <Card.Description>{service.notes}</Card.Description>
-  //     </Card.Content>
-  //   </Card>
-  // );
-console.log("test3", appointment)
   return (
     <>
-    <Form
-    onSubmit={() => handleAppointmentFormSubmit(formData)}
-    >
-  
-  <Form.Field>
-    <label>Pick-up Location</label>
-    <Input
-    name="pickup_location" 
-    value={formData.pickup_location}
-    placeholder='Enter your pick-up location'
-    onChange={(e, { value }) =>
-    setFormData({ ...formData, pickup_location: value })
-  } />
-  </Form.Field>
-  <Form.Field>
-    <label>Drop-off Location</label>
-    <Input
-    name="dropoff_location" 
-    value={formData.dropoff_location}
-    placeholder='Enter your drop-off location'
-    onChange={(e, { value }) =>
-    setFormData({ ...formData, dropoff_location: value })
-  } />
-  </Form.Field>
-  <Form.Field>
-    <label>Schedule Pick-up Time</label>
-    <Input
-    name="booking_time" 
-    value={formData.booking_time}
-    placeholder='Enter your pickup time'
-    onChange={(e, { value }) =>
-    setFormData({ ...formData, booking_time: value })
-  } />
-  </Form.Field>
-  <p>Total: ${calculateTotal()}</p>
-  <Button type='submit'>Submit</Button>
-</Form>
-{formSubmitted && (
-  <Button onClick={handleAddAthleteService} style={{ marginTop: '10px' }}>
-    Add Athlete Service
-  </Button>
-)}
-{appointment.athlete_services && appointment.athlete_services.length > 0 &&(
-  <Button onClick={handleAddAthleteService} style={{ marginTop: '10px' }}>
-    Pre-pay
-  </Button>
-)}
-<Modal open={showModal} onClose={handleModalClose}>
+      <Form onSubmit={formik.handleSubmit}>
+        <Form.Field>
+          <label>Pick-up Location</label>
+          <Input
+            name="pickup_location"
+            value={formik.values.pickup_location}
+            placeholder="Enter your pick-up location"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.pickup_location && formik.errors.pickup_location ? (
+            <div style={{ color: 'red' }}>{formik.errors.pickup_location}</div>
+          ) : null}
+        </Form.Field>
+        <Form.Field>
+          <label>Drop-off Location</label>
+          <Input
+            name="dropoff_location"
+            value={formik.values.dropoff_location}
+            placeholder="Enter your drop-off location"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.dropoff_location && formik.errors.dropoff_location ? (
+            <div style={{ color: 'red' }}>{formik.errors.dropoff_location}</div>
+          ) : null}
+        </Form.Field>
+        <Form.Field>
+          <label>Schedule Pick-up Time</label>
+          <Input
+            name="booking_time"
+            value={formik.values.booking_time}
+            placeholder="Enter your pickup time"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.booking_time && formik.errors.booking_time ? (
+            <div style={{ color: 'red' }}>{formik.errors.booking_time}</div>
+          ) : null}
+        </Form.Field>
+        <p>Estimated Total: ${calculateTotal()}</p>
+        <Button type="submit" disabled={!!appointment.booking_time}>Submit</Button>
+      </Form>
+      {formSubmitted && (
+        <Button onClick={handleAddAthleteService} style={{ marginTop: '10px' }}>
+          Add Athlete Service
+        </Button>
+      )}
+      {appointment.athlete_services && appointment.athlete_services.length > 0 && (
+        <Button style={{ marginTop: '10px' }} onClick={handlePrePayClick}>
+        Pre-pay
+      </Button>
+      )}
+      <Modal open={showModal} onClose={handleModalClose}>
         <Modal.Header>Add Athlete Service</Modal.Header>
         <Modal.Content>
-         <AddAthleteServiceForm appointment={appointment} handleModalClose={handleModalClose} setAppointment={setAppointment}/>
+          <AddAthleteServiceForm appointment={appointment} handleModalClose={handleModalClose} setAppointment={setAppointment} />
         </Modal.Content>
-        
       </Modal>
       {appointment.athlete_services && (
         <Segment>
@@ -147,6 +218,9 @@ console.log("test3", appointment)
             {appointment.athlete_services.map((service) => (
               <Card key={service.id}>
                 <Card.Content>
+                <Button color="red" style={{ position: 'absolute', top: '5px', right: '5px' }} onClick={() => handleDeleteService(service)}>
+                    X
+                  </Button>
                   <Card.Header>{service.services.name}: ${service.services.price}</Card.Header>
                   <Card.Meta>Athlete: {service.athletes.name}</Card.Meta>
                   <Card.Meta>Discipline: {service.discipline}</Card.Meta>
@@ -157,9 +231,11 @@ console.log("test3", appointment)
           </Card.Group>
         </Segment>
       )}
-
-</>
-  )
-}
+      <>
+      <ConfirmAppt showPaymentModal={showPaymentModal} handlePaymentModalClose={handlePaymentModalClose} calculateTotal={calculateTotal} appointment={appointment}/>
+        </>
+    </>
+  );
+};
 
 export default BookAppointment;

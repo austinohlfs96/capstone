@@ -1,20 +1,22 @@
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect,useCallback } from 'react';
+import { setCurrentCoach, addError } from "./coachSlice";
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import { ToastProvider, useToasts } from 'react-toast-notifications';
 import AlertBar from '../../components/AlertBar'
 import Head from "../../components/Header";
 import { Button, Checkbox, Form } from 'semantic-ui-react'
 
-const Signup = () => {
+const SignupContent = () => {
   const navigate = useNavigate()
-  
-  
-
+  const dispatch = useDispatch()
   const [newUser, setNewUser] = useState({})
   const [email, setEmail] = useState('')
   const [pass, setPass] = useState('')
   const [confirmPass, setConfirmPass] = useState('')
+  const { addToast } = useToasts();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
@@ -29,8 +31,8 @@ const Signup = () => {
   }, [])
 
   const handleNewError = useCallback((error) => {
-    setError(error);
-  }, []);
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
 
   const formSchema = yup.object().shape({
     email: yup.string().required('Please enter your email').typeError('Please enter a string.'),
@@ -45,13 +47,12 @@ const Signup = () => {
       team: "",
       password: "",
       confirmpassword: "",
+      profile_picture: "https://i0.wp.com/vssmn.org/wp-content/uploads/2018/12/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png?fit=860%2C681&ssl=1&w=640"
     },
     validationSchema: formSchema,
     onSubmit: async (values) => {
       if (values.password !== values.confirmpassword) {
-        setSnackbarMessage("Password must match.");
-        setSnackbarSeverity("error");
-        setSnackbarOpen(true);
+        handleNewError("Password must match.");
         return;
       }
   
@@ -73,14 +74,15 @@ const Signup = () => {
               })
               navigate('/userhome');
           } else {
-              res.json().then(errorObj => handleNewError(errorObj.message))
+              res.json().then(errorObj => {
+              dispatch(addError(errorObj.message));
+              handleNewError(errorObj.message);
+            });
           }
       })
       } catch (error) {
         console.error('An unexpected error occurred', error);
-        setSnackbarMessage('An unexpected error occurred.');
-        setSnackbarSeverity('error');
-        setSnackbarOpen(true);
+        handleNewError(error);
       }
     },
   });
@@ -135,6 +137,19 @@ const Signup = () => {
           placeholder="Enter team"
         
         />
+        <Form.Field>
+            <label>Athlete Profile Photo</label>
+            <input
+              name="profile_picture"
+              placeholder="Enter img URL for picture"
+              value={formik.values.profile_picture}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.profile_picture && formik.errors.profile_picture && (
+              <div className="error">{formik.errors.profile_picture}</div>
+            )}
+          </Form.Field>
         </Form.Field>
         <Form.Field>
           <label>Password</label>
@@ -177,5 +192,14 @@ const Signup = () => {
   );
 
 }
+
+const Signup = () => {
+  return (
+    <ToastProvider>
+      <SignupContent />
+    </ToastProvider>
+  );
+};
+
 
 export default Signup;
