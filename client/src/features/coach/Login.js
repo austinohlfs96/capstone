@@ -1,8 +1,6 @@
-
-
 import { useNavigate } from 'react-router-dom';
-import { useState, useCallback } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+import { useCallback } from 'react';
+import { useDispatch } from "react-redux";
 import { setCurrentCoach, addError } from "./coachSlice";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -14,13 +12,6 @@ const LoginContent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { addToast } = useToasts();
-  const errors = useSelector(state => state.errors);
-
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
-  const [alertMessage, setAlertMessage] = useState(null);
-  const [snackType, setSnackType] = useState('');
-
   const formSchema = yup.object().shape({
     email: yup.string().required("Please enter an email."),
     password: yup.string().required("Please enter a password.")

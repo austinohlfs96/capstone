@@ -3,9 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Modal, Dropdown } from 'semantic-ui-react';
-import { addServiceToAppointment } from './appointmentSlice';
 import { patchAppointment, patchAthlete, addError, fetchCurrentUser } from '../coach/coachSlice';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { useToasts } from 'react-toast-notifications';
 import { getToken } from '../../utils/main';
 import { checkToken } from '../../utils/main';
 import { useFormik } from 'formik';
@@ -39,17 +38,13 @@ const AddAthleteServiceForm = ({ appointment, handleModalClose, setAppointment }
   });
 
   const sendRequest = (values) => {
-    // Check if the user is logged in before making the PATCH request
     if (!getToken() || !checkToken()) {
       handleNewError('User not logged in');
       navigate('/')
-      // Handle the case where the user is not logged in (redirect, show a message, etc.)
       return;
     }
 
     const formData = { ...values, appointment_id: appointment.id };
-
-    // Make a POST request to the server
     fetch('http://127.0.0.1:5555/athlete-services', {
       method: 'POST',
       headers: {
@@ -105,14 +100,12 @@ const AddAthleteServiceForm = ({ appointment, handleModalClose, setAppointment }
         if (!response.ok) {
           throw new Error('Failed to fetch services');
         }
-
         const data = await response.json();
         setServices(data);
       } catch (error) {
         console.error('Error fetching services:', error.message);
       }
     };
-
     fetchServices();
   }, []);
 

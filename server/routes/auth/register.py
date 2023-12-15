@@ -20,7 +20,7 @@ class Register(Resource):
                 "name": request.get_json().get("name"),
                 "email": request.get_json().get("email"),
                 "team": request.get_json().get("team"),
-                # "_password_hash": request.get_json().get("password")
+                "profile_picture": request.get_json().get("profile_picture")
             }
             coach_schema.validate(data)
             coach = coach_schema.load(data)

@@ -3,11 +3,10 @@ import React, {useCallback, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Form, Input } from 'semantic-ui-react';
 import { patchAthlete, addError, fetchCurrentUser } from '../coach/coachSlice';
-import { addEquipmentToAthlete } from './AthleteSlice';
 import { useFormik } from 'formik';
 import { getToken, checkToken } from '../../utils/main';
 import * as Yup from 'yup';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { useToasts } from 'react-toast-notifications';
 
 const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
   const dispatch = useDispatch();
@@ -30,10 +29,8 @@ const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
   });
 
   const sendRequest = (values) => {
-    // Check if the user is logged in before making the PATCH request
     if (!getToken() || !checkToken()) {
       handleNewError('User not logged in');
-      // Handle the case where the user is not logged in (redirect, show a message, etc.)
       return;
     }
     const formDataWithoutExcludedField = { ...values };
@@ -54,7 +51,6 @@ const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
                          };
               dispatch(patchAthlete(updatedAthlete));
               onCloseAddEquipmentModal();
-              // handleItemClick(null, { name: 'athletes' });
             })
         } else {
             res.json().then(errorObj => {

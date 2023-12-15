@@ -12,7 +12,6 @@ const athleteSlice = createSlice({
   reducers: {
     setCurrentAthlete(state, action) {
       state.loading = false
-      debugger
       state.data = action.payload
     },
     addError(state, action) {

@@ -1,33 +1,47 @@
-import {useEffect, useState} from "react"
+import {useEffect, useState, useCallback} from "react"
 import {useSelector, useDispatch } from "react-redux"
+import { useNavigate } from 'react-router-dom';
 import { Card, Button, Modal, Form, TextArea } from 'semantic-ui-react'
-import { deleteAppointmentsToCoach, patchAppointmentsAthleteServices, patchAppointment, patchAthlete } from '../coach/coachSlice';
-import { setCurrentAppointment, patchAthleteService} from "./appointmentSlice";
-import {  } from "./athleteServiceSlice";
-
+import { deleteAppointmentsToCoach, patchAppointment, patchAthlete, fetchCurrentUser } from '../coach/coachSlice';
+import { getToken } from '../../utils/main';
+import { checkToken } from '../../utils/main';
+import { useToasts } from 'react-toast-notifications';
 
 const CoachAppointments = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const coach = useSelector((state) => state.coach.data)
-  // const athleteService = useSelector((state) => state.athleteService.data)
   const coachAppointments = coach.appointment;
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [reviewText, setReviewText] = useState('');
   const [showReviewField, setShowReviewField] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const { addToast } = useToasts();
+  const handleNewError = useCallback((error) => {
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
 
   
-  
-
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
 
 
   const handleRemoveAppointment = (event,appointment) => {
     event.stopPropagation();
+    if (!getToken() || !checkToken()) {
+      handleNewError('User not logged in');
+      navigate('/')
+      return;
+    }
+    const choice = prompt('Are you sure want to delete this appointment? This will delete all this appopintment data. There is no coming back from this!\nType YES to continue.');
+    if (!choice) {
+      return;
+    } else if (choice.toLowerCase() === 'yes') {
     fetch(`http://127.0.0.1:5555/appointment/${appointment.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        // Add any other headers needed (e.g., authentication token)
       },
     })
       .then((response) => {
@@ -37,7 +51,6 @@ const CoachAppointments = () => {
         return response.json();
       })
       .then(() => {
-        // Dispatch a Redux action to update the state
         dispatch(deleteAppointmentsToCoach(appointment.id));
         const athleteIds = appointment.athlete_services.map((service) => service.athletes.id);
         athleteIds.forEach((athleteId) => {
@@ -52,8 +65,6 @@ const CoachAppointments = () => {
               const updatedAthleteServices = athleteData.athlete_services.filter(
                 (service) => !appointment.athlete_services.find((appService) => appService.id === service.id)
               );
-
-              // Update the athlete's athlete services
               dispatch(patchAthlete({
                 ...athleteData,
                 athlete_services: updatedAthleteServices,
@@ -61,20 +72,14 @@ const CoachAppointments = () => {
             })
             .catch((error) => {
               console.error('Error updating athlete services:', error.message);
-              // Handle the error, e.g., display an error message
             });
         });
       })
       .catch((error) => {
         console.error('Error deleting appointment:', error.message);
-        // Handle the error, e.g., display an error message
       });
   }
-  // .catch((error) => {
-  //   console.error('Error fetching appointment data:', error.message);
-  //   // Handle the error, e.g., display an error message
-  // }
-
+  };
 
   const handleCardClick = (appointment) => {
     setSelectedAppointment(appointment);
@@ -98,7 +103,6 @@ const CoachAppointments = () => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          // Add any other headers needed (e.g., authentication token)
         },
         body: JSON.stringify({ reviews: reviewText }),
       })
@@ -120,17 +124,13 @@ const CoachAppointments = () => {
         })
         .catch((error) => {
           console.error(error);
-          // Handle error as needed
         });
     }
-  
-    // Reset the review field and hide it
+
     setSelectedService(null);
     setReviewText('');
   };
   
-  
-
 
   return (
     <>

@@ -35,9 +35,6 @@ const ConfirmEmail = ({ appointment }) => {
 
   return (
     <form ref={form} onSubmit={sendEmail}>
-      {/* ... (Your existing form fields go here) */}
-
-      {/* Additional input field for user input */}
       <Form.Field>
         <label>Additional Data</label>
         <Input

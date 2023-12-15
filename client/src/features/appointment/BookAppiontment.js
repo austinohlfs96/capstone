@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Modal, Card, Segment } from 'semantic-ui-react';
 import { addAppointmentsToCoach, addError, patchAthlete, patchAppointment, fetchCurrentUser } from '../coach/coachSlice';
 import AddAthleteServiceForm from './AddAthleteServiceForm';
@@ -11,12 +12,12 @@ import * as Yup from 'yup';
 import ConfirmAppt from './AppointmentConfirm';
 
 const BookAppointment = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const coachId = useSelector((state) => state.coach.data.id)
   const coach = useSelector((state) => state.coach.data);
   const [appointment, setAppointment] = useState({});
   const [athlete, setAthlete] = useState({});
-  const appointmentServices = appointment.athlete_services || [];
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const coachAthletes = coach.athletes;
@@ -38,14 +39,11 @@ const BookAppointment = () => {
   });
 
   const sendRequest = (values) => {
-    // Check if the user is logged in before making the PATCH request
     if (!getToken() || !checkToken()) {
       handleNewError('User not logged in');
-      // Handle the case where the user is not logged in (redirect, show a message, etc.)
+      navigate('/')
       return;
     }
-
-    // Perform PATCH request to update coach on the backend
     fetch('http://127.0.0.1:5555/appointments', {
       method: 'POST',
       headers: {
@@ -85,11 +83,11 @@ const BookAppointment = () => {
   
 
   const handleAddAthleteService = () => {
-    setShowModal(true); // Show the modal when "Add Athlete Service" is clicked
+    setShowModal(true); 
   };
 
   const handleModalClose = () => {
-    setShowModal(false); // Close the modal
+    setShowModal(false); 
   };
 
   const handlePrePayClick = () => {
@@ -109,6 +107,12 @@ const BookAppointment = () => {
   };
 
   const handleDeleteService = (services) => {
+    if (!getToken() || !checkToken()) {
+      handleNewError('User not logged in');
+      navigate('/')
+      return;
+    }
+
     const selectedAthlete = coachAthletes.find((athlete) => athlete.id === services.athletes.id)
     console.log("selectedAthlete",selectedAthlete)
     setAthlete(selectedAthlete)
@@ -126,7 +130,6 @@ const BookAppointment = () => {
             ...appointment,
             athlete_services: updatedService,
           });
-          // console.log('test69', athlete)
           dispatch(patchAppointment({
             ...appointment,
             athlete_services: updatedService,
@@ -137,7 +140,6 @@ const BookAppointment = () => {
           }));
           console.log( "athlete", athlete)
         } else {
-          // If the deletion fails, handle the error
           res.json().then(errorObj => {
             dispatch(addError(errorObj.message));
             handleNewError(errorObj.message);
@@ -146,7 +148,6 @@ const BookAppointment = () => {
       })
       .catch((error) => {
         console.error('Error deleting service:', error.message);
-        // Handle the error, e.g., display an error message
       });
   };
 

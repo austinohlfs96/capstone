@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, Image, Button, Modal, Grid, Header, Dropdown } from 'semantic-ui-react';
 import { deleteAthleteToCoach, fetchCurrentUser } from '../coach/coachSlice';
 import {setCurrentAthlete} from "./AthleteSlice"
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { useToasts } from 'react-toast-notifications';
 import { getToken } from '../../utils/main';
 import { checkToken } from '../../utils/main';
 import EditAthlete from './EditAthlete'
@@ -36,28 +36,24 @@ const AthleteCards = () => {
     return null;
   }
 
-
-
   const coachAthletes = coach.athletes;
   console.log(coachAthletes)
 
   const handleRemoveAthlete = (e,athleteId) => {
     e.stopPropagation();
-    // Make a delete request to your server
     if (!getToken() || !checkToken()) {
       handleNewError('User not logged in');
-      navigate('/login')
-      // Handle the case where the user is not logged in (redirect, show a message, etc.)
+      navigate('/')
       return;
     }
-  
-    e.stopPropagation();
-      // Make a delete request to your server
+    const choice = prompt(`Are you sure want to delete this athlete? This will delete all this athlete's equipment and service data. There is no coming back from this!\nType YES to continue.`);
+    if (!choice) {
+      return;
+    } else if (choice.toLowerCase() === 'yes') {
       fetch(`http://127.0.0.1:5555/athlete/${athleteId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          // Add any other headers needed (e.g., authentication token)
         },
       })
         .then((response) => {
@@ -67,18 +63,17 @@ const AthleteCards = () => {
           return response.json();
         })
         .then(() => {
-          // Dispatch a Redux action to update the state
           dispatch(deleteAthleteToCoach(athleteId));
         })
         .catch((error) => {
           console.error(error);
-          // Handle error as needed
         });
     };
+  }
   
 
   const handleEditAthlete = (athlete, event) => {
-    event.stopPropagation(); // Stop the click event from reaching the card
+    event.stopPropagation(); 
     setAthlete(athlete);
     dispatch(setCurrentAthlete(athlete));
     setEditModalOpen(true);
@@ -88,7 +83,7 @@ const AthleteCards = () => {
   }
 
   const handleAddEquipment = (athlete, event) => {
-    event.stopPropagation(); // Stop the click event from reaching the card
+    event.stopPropagation(); 
     setAthlete(athlete);
     dispatch(setCurrentAthlete(athlete));
     setAddEquipmentModalOpen(true);
@@ -190,7 +185,6 @@ const AthleteCards = () => {
                 <Card.Meta>Technician Notes: {service.technicain_notes}</Card.Meta>
                 <Card.Description>Notes: {service.notes}</Card.Description>
                 <Card.Description>Review: {service.reviews}</Card.Description>
-                {/* Add more details as needed */}
               </Card.Content>
             </Card>
           ))}

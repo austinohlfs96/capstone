@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { Header, Segment, Button, Image, Sticky } from 'semantic-ui-react'
 import { useSelector } from "react-redux"
 import { logout, fetchCurrentUser } from '../features/coach/coachSlice'
-// import { ToastProvider, useToasts } from 'react-toast-notifications';
 import { getToken } from '../utils/main';
 import { checkToken } from '../utils/main';
 

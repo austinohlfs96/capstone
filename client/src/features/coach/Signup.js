@@ -1,34 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect,useCallback } from 'react';
-import { setCurrentCoach, addError } from "./coachSlice";
+import { useDispatch } from "react-redux";
+import { useState, useCallback } from 'react';
+import { addError } from "./coachSlice";
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { ToastProvider, useToasts } from 'react-toast-notifications';
-import AlertBar from '../../components/AlertBar'
+import { useToasts } from 'react-toast-notifications';
 import Head from "../../components/Header";
 import { Button, Checkbox, Form } from 'semantic-ui-react'
 
-const SignupContent = () => {
+const Signup = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [newUser, setNewUser] = useState({})
-  const [email, setEmail] = useState('')
-  const [pass, setPass] = useState('')
-  const [confirmPass, setConfirmPass] = useState('')
   const { addToast } = useToasts();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [coach, setCoach] = useState(null)
-
   const updateCoach = (coach) => setCoach(coach)
-  const [error, setError] = useState("");
-  
-
-  useEffect(() => {
-    setSnackbarOpen(false)
-  }, [])
 
   const handleNewError = useCallback((error) => {
     addToast(error, { appearance: 'error', autoDismiss: true });
@@ -38,7 +23,8 @@ const SignupContent = () => {
     email: yup.string().required('Please enter your email').typeError('Please enter a string.'),
     password: yup.string().required('Please enter a password.').typeError('Please enter a string.'),
     confirmpassword: yup.string().required('Please enter the same password.').typeError('Please enter a string.'), 
-  })
+    profile_picture: yup.string().url('Please enter a valid URL for the profile picture'),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -47,17 +33,18 @@ const SignupContent = () => {
       team: "",
       password: "",
       confirmpassword: "",
-      profile_picture: "https://i0.wp.com/vssmn.org/wp-content/uploads/2018/12/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png?fit=860%2C681&ssl=1&w=640"
+      profile_picture: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"
     },
     validationSchema: formSchema,
     onSubmit: async (values) => {
+      console.log("val", values)
       if (values.password !== values.confirmpassword) {
         handleNewError("Password must match.");
         return;
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:5555/auth/register`, {
+        fetch(`http://127.0.0.1:5555/auth/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -86,9 +73,6 @@ const SignupContent = () => {
       }
     },
   });
-  
-
-  
 
   const handleInputChange = (e) => {
     const trimmedValue = e.target.value.trim();
@@ -97,10 +81,6 @@ const SignupContent = () => {
 
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-  
   return (
     <div className='modal'>
       <Head/>
@@ -137,19 +117,6 @@ const SignupContent = () => {
           placeholder="Enter team"
         
         />
-        <Form.Field>
-            <label>Athlete Profile Photo</label>
-            <input
-              name="profile_picture"
-              placeholder="Enter img URL for picture"
-              value={formik.values.profile_picture}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.profile_picture && formik.errors.profile_picture && (
-              <div className="error">{formik.errors.profile_picture}</div>
-            )}
-          </Form.Field>
         </Form.Field>
         <Form.Field>
           <label>Password</label>
@@ -181,25 +148,10 @@ const SignupContent = () => {
         <Button type='submit'>Submit</Button>
         <Button type='submit' onClick={() => navigate('/')}>Cancel</Button>
       </Form>
-      <AlertBar
-          message={snackbarMessage}
-          setAlertMessage={setSnackbarMessage}
-          snackType={snackbarSeverity}
-          handleSnackType={setSnackbarSeverity}
-          onClose={handleCloseSnackbar}
-      />
       </div>
   );
 
 }
-
-const Signup = () => {
-  return (
-    <ToastProvider>
-      <SignupContent />
-    </ToastProvider>
-  );
-};
 
 
 export default Signup;

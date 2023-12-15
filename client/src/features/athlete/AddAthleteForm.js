@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Grid, Segment, Button, Form, Input } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { addAthleteToCoach, addError, fetchCurrentUser } from '../coach/coachSlice';
-import { addErrors } from './AthleteSlice';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { useToasts } from 'react-toast-notifications';
 import { getToken } from '../../utils/main';
 import { checkToken } from '../../utils/main';
 
 
 
 
-const AddAthleteFormContent = ({handleItemClick, athlete}) => {
+const AddAthleteForm = ({handleItemClick, athlete}) => {
   const coachId = useSelector((state) => state.coach.data.id);
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { addToast } = useToasts();
   const handleNewError = useCallback((error) => {
     addToast(error, { appearance: 'error', autoDismiss: true });
@@ -48,53 +49,15 @@ const AddAthleteFormContent = ({handleItemClick, athlete}) => {
     // profile_picture: Yup.string().url('Invalid URL')
   });
 
-  // const sendRequest = (values) => {
-  //   // Check if the user is logged in before making the PATCH request
-  //   if (!getToken() || !checkToken()) {
-  //     handleNewError('User not logged in');
-  //     // navigate('/')
-  //     // Handle the case where the user is not logged in (redirect, show a message, etc.)
-  //     return;
-  //   }
-
-  //   // Perform PATCH request to update coach on the backend
-  //   const dataToSend = { ...values, coaches_id: coachId };
-
-  //   const requestMethod = athlete ? 'PATCH' : 'POST';
-  //   const apiUrl = athlete ? `http://127.0.0.1:5555/athlete/${athlete.id}` : 'http://127.0.0.1:5555/athletes';
-
-  //   fetch(apiUrl, {
-  //     method: requestMethod,
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(dataToSend),
-  //   })
-  //   .then(res => {
-  //     if (res.ok) {
-  //         res.json().then(createdAthlete => {
-  //           dispatch(addAthleteToCoach(createdAthlete));
-  //           handleItemClick(null, { name: 'athletes' });
-  //         })
-  //     } else {
-  //         res.json().then(errorObj => {
-  //           console.log("error", errorObj)
-  //         dispatch(addError(errorObj.message));
-  //         handleNewError(errorObj.message);
-  //       });
-  //     }
-  //     })
-  //   }
+  
 
   const onSubmit = (values) => {
     if (!getToken() || !checkToken()) {
       handleNewError('User not logged in');
-      // navigate('/')
-      // Handle the case where the user is not logged in (redirect, show a message, etc.)
+      navigate('/')
       return;
     }
 
-    // Perform PATCH request to update coach on the backend
     const dataToSend = { ...values, coaches_id: coachId };
 
     const requestMethod = athlete ? 'PATCH' : 'POST';
@@ -257,14 +220,5 @@ const AddAthleteFormContent = ({handleItemClick, athlete}) => {
   </Grid.Column>
   );
 };
-
-const AddAthleteForm = ({handleItemClick}) => {
-  return (
-    <ToastProvider>
-      <AddAthleteFormContent handleItemClick={handleItemClick} />
-    </ToastProvider>
-  );
-};
-
 
 export default AddAthleteForm;

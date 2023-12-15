@@ -1,18 +1,13 @@
 import {useState, useEffect} from "react"
-import {useSelector} from "react-redux"
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Grid, Menu, Segment, Button, Form, Input, Card } from 'semantic-ui-react'
+import { useLocation } from 'react-router-dom';
+import { Grid, Menu, Segment } from 'semantic-ui-react'
 import EditCoachForm from './EditCoachForm'
 import AddAthleteForm from "../athlete/AddAthleteForm"
 import AthleteCards from "../athlete/AthleteCards"
 import BookAppointment from "../appointment/BookAppiontment";
 import CoachAppointments from "../appointment/CoachAppointments";
 
-
-
 const MenuExampleTabularOnLeft = () => {
-  const navigate = useNavigate()
-  const coach = useSelector((state) => state.coach.data)
   const location = useLocation();
   const [menuState, setMenuState] = useState({activeItem: 'athletes'})
 
@@ -24,7 +19,7 @@ const MenuExampleTabularOnLeft = () => {
     if (location.pathname === '/editathlete') {
       setMenuState({ activeItem: 'add-athlete' });
     } else {
-      setMenuState({ activeItem: 'athletes' }); // Set the default active item for other routes
+      setMenuState({ activeItem: 'athletes' });
     }
   }, [location.pathname]);
 

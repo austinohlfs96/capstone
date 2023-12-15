@@ -1,16 +1,14 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, Image, Button, Modal, Form, Input } from 'semantic-ui-react';
-import { deleteAthleteToCoach, patchAthlete, addError, fetchCurrentUser} from '../coach/coachSlice';
+import { Button, Form, Input } from 'semantic-ui-react';
+import { patchAthlete, fetchCurrentUser} from '../coach/coachSlice';
 import { getToken, checkToken } from '../../utils/main';
-import {setCurrentAthlete} from "./AthleteSlice"
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { useToasts } from 'react-toast-notifications';
 
 
 
 const EditAthlete = ({ athlete, onClose }) => {
-  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const coach = useSelector((state) => state.coach.data);
@@ -22,9 +20,6 @@ const EditAthlete = ({ athlete, onClose }) => {
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
-  
-
-  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
       name: athlete.name,
@@ -40,14 +35,12 @@ const EditAthlete = ({ athlete, onClose }) => {
   console.log(coach)
 
   const sendRequest = () => {
-    // Check if the user is logged in before making the PATCH request
     if (!getToken() || !checkToken()) {
       handleNewError('User not logged in');
-      // Handle the case where the user is not logged in (redirect, show a message, etc.)
+      navigate('/')
       return;
     }
 
-    // Perform PATCH request to update coach on the backend
     fetch(`http://127.0.0.1:5555/athlete/${athlete.id}`, {
       method: 'PATCH',
       headers: {
@@ -64,49 +57,19 @@ const EditAthlete = ({ athlete, onClose }) => {
       } else {
           res.json().then(errorObj => {
             console.log("error", errorObj)
-          // dispatch(addError(errorObj.message));
           handleNewError(errorObj.message);
         });
       }
       })
     };
 
-  
   const handleEditFormSubmit = () => {
     sendRequest()
-    // fetch(`http://127.0.0.1:5555/athlete/${athlete.id}`, {
-    //   method: 'PATCH',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(formData),
-    // })
-    // .then(res => {
-    //   if (res.ok) {
-    //       res.json().then(athlete => {
-    //         dispatch(patchAthlete(athlete));
-    //         onClose();
-    //       })
-    //   } else {
-    //       res.json().then(errorObj => {
-    //         console.log("error", errorObj)
-    //       // dispatch(addError(errorObj.message));
-    //       handleNewError(errorObj.message);
-    //     });
-    //   }
-    //   })
     }
  
-
-
-
-
-console.log(coach)
-  const title = 'USER HOME'
   return (
    
     <Form onSubmit={() => handleEditFormSubmit(formData)}>
-   
     <Form.Field>
       <label>Athlete Name</label>
       <Input
