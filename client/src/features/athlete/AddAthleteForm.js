@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { Grid, Segment, Button, Form, Input } from 'semantic-ui-react';
+import { Grid, Segment, Button, Form, Input, Header } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addAthleteToCoach, addError, fetchCurrentUser } from '../coach/coachSlice';
@@ -16,6 +16,7 @@ const AddAthleteForm = ({handleItemClick, athlete}) => {
   const coachId = useSelector((state) => state.coach.data.id);
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const jwtToken = localStorage.getItem('jwt_token')
   const { addToast } = useToasts();
   const handleNewError = useCallback((error) => {
     addToast(error, { appearance: 'error', autoDismiss: true });
@@ -67,6 +68,7 @@ const AddAthleteForm = ({handleItemClick, athlete}) => {
       method: requestMethod,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
       },
       body: JSON.stringify(dataToSend),
     })
@@ -95,6 +97,7 @@ const AddAthleteForm = ({handleItemClick, athlete}) => {
   return (
     <Grid.Column stretched width={12}>
     <Segment>
+    <Header><h1>Add Athlete</h1></Header>
     <Form onSubmit={formik.handleSubmit}>
     <Form.Field>
             <label>Athlete Name</label>

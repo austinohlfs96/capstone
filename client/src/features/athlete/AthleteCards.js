@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, Image, Button, Modal, Grid, Header, Dropdown } from 'semantic-ui-react';
+import { Card, Image, Button, Modal, Grid, Header, Dropdown, Segment } from 'semantic-ui-react';
 import { deleteAthleteToCoach, fetchCurrentUser } from '../coach/coachSlice';
 import {setCurrentAthlete} from "./AthleteSlice"
 import { useToasts } from 'react-toast-notifications';
@@ -11,7 +11,8 @@ import EditAthlete from './EditAthlete'
 import AddEquipment from './AddEquipment';
 
 
-const AthleteCards = () => {
+const AthleteCards = ({handleItemClick}) => {
+  const jwtToken = localStorage.getItem('jwt_token')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const coach = useSelector((state) => state.coach.data);
@@ -54,6 +55,7 @@ const AthleteCards = () => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwtToken}`,
         },
       })
         .then((response) => {
@@ -95,9 +97,21 @@ const AthleteCards = () => {
     setAddEquipmentModalOpen(false);
   };
 
+  const handleAddAthlete = () => {
+    handleItemClick(null, { name: 'add-athlete' })
+  }
+
   return (
     <>
-    {/* <Modal.Header><h1>Athletes</h1></Modal.Header> */}
+    <Segment style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
+    <Header><h1>Athletes</h1>
+    <Button secondary style={{ position: 'absolute', top: '5px', right: '5px' }}
+          onClick={handleAddAthlete}
+          >
+          Add Athlete
+        </Button>
+    </Header>
+    
     <Card.Group>
       {coachAthletes.map((athlete) => (
         <Card key={athlete.id} onClick={() => setSelectedAthlete(athlete)}>
@@ -127,6 +141,7 @@ const AthleteCards = () => {
         </Card>
       ))}
     </Card.Group>
+    </Segment>
 
     <Modal open={!!selectedAthlete} size='small' onClose={() => setSelectedAthlete(null)}>
   <Modal.Header>{selectedAthlete?.name}</Modal.Header>

@@ -1,13 +1,14 @@
 import {useEffect, useState, useCallback} from "react"
 import {useSelector, useDispatch } from "react-redux"
 import { useNavigate } from 'react-router-dom';
-import { Card, Button, Modal, Form, TextArea } from 'semantic-ui-react'
-import { deleteAppointmentsToCoach, patchAppointment, patchAthlete, fetchCurrentUser } from '../coach/coachSlice';
+import { Card, Button, Modal, Form, TextArea, Header, Input } from 'semantic-ui-react'
+import { deleteAppointmentsToCoach, patchAppointment, patchAthlete, fetchCurrentUser, addError } from '../coach/coachSlice';
 import { getToken } from '../../utils/main';
 import { checkToken } from '../../utils/main';
 import { useToasts } from 'react-toast-notifications';
+import EditAppointment from "./EditAppointment";
 
-const CoachAppointments = () => {
+const CoachAppointments = ({handleItemClick}) => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const coach = useSelector((state) => state.coach.data)
@@ -16,16 +17,20 @@ const CoachAppointments = () => {
   const [reviewText, setReviewText] = useState('');
   const [showReviewField, setShowReviewField] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editedAppointment, setEditedAppointment] = useState({});
   const { addToast } = useToasts();
   const handleNewError = useCallback((error) => {
     addToast(error, { appearance: 'error', autoDismiss: true });
   }, [addToast]);
+  const handleNewMessage = useCallback((message) => {
+    addToast(message, { appearance: 'success', autoDismiss: true });
+  }, [addToast]);
 
-  
+
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
-
 
   const handleRemoveAppointment = (event,appointment) => {
     event.stopPropagation();
@@ -130,24 +135,32 @@ const CoachAppointments = () => {
     setSelectedService(null);
     setReviewText('');
   };
-  
+
+  const handleBookAppointment = () => {
+    handleItemClick(null, { name: 'book-appointment' })
+  }
 
   return (
     <>
+    <Header><h1>Appointments</h1>
+    <Button secondary style={{ position: 'absolute', top: '5px', right: '5px' }}
+          onClick={handleBookAppointment}
+          >
+          Book Appointment
+        </Button>
+    </Header>
     <Card.Group>
         {coachAppointments.map((appointment) => (
           <Card key={appointment.id} onClick={() => handleCardClick(appointment)}>
-          
-          
           <Card.Content>
           <Button secondary style={{ position: 'absolute', top: '5px', right: '5px' }}
           onClick={(event) => handleRemoveAppointment(event, appointment)}
           >
           X
         </Button>
-            <Card.Header>{appointment.booking_time}</Card.Header>
+            <Card.Header>{appointment.booking_time} ID#: {appointment.id}</Card.Header>
             <Card.Meta>
-              <span className='date'>{`Pick-up: ${appointment.pickup_location}`}</span>
+            <span className='date'>{`Pick-up: ${appointment.pickup_location}`}</span>
             </Card.Meta>
             
             <Card.Description>{`Drop-off: ${appointment.dropoff_location}`}</Card.Description>
@@ -161,7 +174,17 @@ const CoachAppointments = () => {
 
     {selectedAppointment && (
       <Modal open onClose={handleCloseModal}>
-        <Modal.Header>{selectedAppointment.booking_time}</Modal.Header>
+        <Modal.Header>{selectedAppointment.booking_time}
+        <Button
+          secondary
+          onClick={() => {
+            setIsEditModalOpen(true);
+            setEditedAppointment(selectedAppointment); 
+          }}
+        >
+          Edit Appointment
+        </Button>
+        </Modal.Header>
         <Modal.Content>
           <Modal.Description>
             <p>{`Pick-up: ${selectedAppointment.pickup_location}`}</p>
@@ -211,7 +234,10 @@ const CoachAppointments = () => {
         </Modal.Content>
       </Modal>
       )}
-
+      {isEditModalOpen && (
+      <EditAppointment setIsEditModalOpen={setIsEditModalOpen} setSelectedAppointment={setSelectedAppointment} isEditModalOpen={isEditModalOpen} selectedAppointment={selectedAppointment} handleItemClick={handleItemClick}/>
+      )} 
+     
     </>
     
   )

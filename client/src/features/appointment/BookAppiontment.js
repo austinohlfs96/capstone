@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, Input, Modal, Card, Segment } from 'semantic-ui-react';
+import { Button, Form, Input, Modal, Card, Segment, Header } from 'semantic-ui-react';
 import { addAppointmentsToCoach, addError, patchAthlete, patchAppointment, fetchCurrentUser } from '../coach/coachSlice';
 import AddAthleteServiceForm from './AddAthleteServiceForm';
 import { useFormik } from 'formik';
@@ -11,7 +11,7 @@ import { checkToken } from '../../utils/main';
 import * as Yup from 'yup';
 import ConfirmAppt from './AppointmentConfirm';
 
-const BookAppointment = () => {
+const BookAppointment = ({handleItemClick}) => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const coachId = useSelector((state) => state.coach.data.id)
@@ -26,6 +26,10 @@ const BookAppointment = () => {
 
   const handleNewError = useCallback((error) => {
     addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
+
+  const handleNewMessage = useCallback((message) => {
+    addToast(message, { appearance: 'success', autoDismiss: true });
   }, [addToast]);
 
   useEffect(() => {
@@ -56,6 +60,7 @@ const BookAppointment = () => {
           res.json().then(createdAppointment => {
             dispatch(addAppointmentsToCoach(createdAppointment));
             setAppointment(createdAppointment);
+            handleNewMessage('Appointment created book sevices and confirm appointment to schedule your appointment.')
             setFormSubmitted(true);
           })
       } else {
@@ -153,6 +158,7 @@ const BookAppointment = () => {
 
   return (
     <>
+     <Header><h1>Book Appointment</h1></Header>
       <Form onSubmit={formik.handleSubmit}>
         <Form.Field>
           <label>Pick-up Location</label>
@@ -203,7 +209,7 @@ const BookAppointment = () => {
       )}
       {appointment.athlete_services && appointment.athlete_services.length > 0 && (
         <Button style={{ marginTop: '10px' }} onClick={handlePrePayClick}>
-        Pre-pay
+        Confirm
       </Button>
       )}
       <Modal open={showModal} onClose={handleModalClose}>
@@ -232,9 +238,10 @@ const BookAppointment = () => {
           </Card.Group>
         </Segment>
       )}
-      <>
-      <ConfirmAppt showPaymentModal={showPaymentModal} handlePaymentModalClose={handlePaymentModalClose} calculateTotal={calculateTotal} appointment={appointment}/>
-        </>
+       {appointment.athlete_services && appointment.athlete_services.length > 0 && (
+       <ConfirmAppt showPaymentModal={showPaymentModal} handlePaymentModalClose={handlePaymentModalClose} calculateTotal={calculateTotal} appointment={appointment} handleItemClick={handleItemClick}/>
+      )}
+    
     </>
   );
 };

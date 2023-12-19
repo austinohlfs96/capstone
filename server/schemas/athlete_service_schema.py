@@ -1,6 +1,7 @@
-from marshmallow import fields, validate
-from config import ma
+from marshmallow import fields, validate, validates
+from config import ma, db
 from models.athlete_services import AthleteService
+from models.athletes import Athlete
 
 class AthleteServiceSchema(ma.SQLAlchemySchema):
   class Meta:
@@ -20,3 +21,8 @@ class AthleteServiceSchema(ma.SQLAlchemySchema):
   services = fields.Nested("ServiceSchema", only=("id", "name", "description", "price", "average_turn_around", "is_available"), dump_only=True)
   equipment = fields.Nested("EquipmentSchema", only=("id", "type", "manifacture", "model", "year", "length", "width", "athlete_id"), dump_only=True)
   # appointment = fields.Nested("AppointmentSchema", only=("id", "pickup_location", "dropoff_location", "booking_time", "coaches_id"), dump_only=True)
+  
+  @validates('athlete_id')
+  def validate_athlete_id(self, athlete_id):
+    return db.session.get(Athlete, athlete_id)
+  

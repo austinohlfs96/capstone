@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux"
 import {setCurrentCoach, addError} from "./coachSlice"
 import { useEffect, useCallback } from 'react'
 import Head from "../../components/Header"
-import { Image } from 'semantic-ui-react'
+import { Image, Sticky } from 'semantic-ui-react'
 import { useToasts } from 'react-toast-notifications';
 
 const UserHome = () => {
@@ -12,7 +12,6 @@ const UserHome = () => {
   const dispatch = useDispatch()
   const { addToast } = useToasts();
   const coach = useSelector((state) => state.coach.data)
-
   const handleNewError = useCallback((error) => {
     addToast(error, { appearance: 'error', autoDismiss: true });
   }, [addToast]);
@@ -67,14 +66,18 @@ console.log(coach)
       <Head coach={coach}/>
       {/*  */}
       
+      
       {coach && (
   <>
-  <Image src={coach.profile_picture} size='small' />
-    <h1>{coach.name}</h1>
+
+  <Image src="https://swiftmedia.s3.amazonaws.com/mountain.swiftcom.com/images/sites/7/2016/08/27202111/howtoskibum-vdw-012116-6.jpg" size ='small' style={{margin: '15px'}}/>
+  <h1 style={{ color: 'white' }}>{coach.name}</h1>
+  <h2 style={{ color: 'white' }}>Team: {coach.team}</h2>
+
   </>
 )}
       <MenuExampleTabularOnLeft/>
-        
+      
     </div>
   )
 }

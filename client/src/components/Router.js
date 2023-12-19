@@ -6,7 +6,8 @@ import Error from './Error';
 import UserHome from '../features/coach/UserHome';
 import Services from "./Services";
 import Contact from "./Contact";
-
+import AthleteSpotlight from "./AthleteSpotlight";
+import Gallery from "./Gallery"
 
 function Router() {
   const routes = (
@@ -17,7 +18,8 @@ function Router() {
       <Route path='/userhome' element={<UserHome/>} />,
       <Route path='/services' element={<Services/>} />,
       <Route path='/contact' element={<Contact/>}/>,
-      
+      <Route path="/athletespotlight" element={<AthleteSpotlight/>}/>,
+      <Route path='/gallery' element={<Gallery/>}/>,
 
     </>
   )

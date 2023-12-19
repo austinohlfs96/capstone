@@ -9,6 +9,7 @@ import { useToasts } from 'react-toast-notifications';
 
 
 const EditAthlete = ({ athlete, onClose }) => {
+  const jwtToken = localStorage.getItem('jwt_token')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const coach = useSelector((state) => state.coach.data);
@@ -45,6 +46,7 @@ const EditAthlete = ({ athlete, onClose }) => {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
       },
       body: JSON.stringify(formData),
     })

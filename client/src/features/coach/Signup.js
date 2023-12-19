@@ -6,7 +6,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useToasts } from 'react-toast-notifications';
 import Head from "../../components/Header";
-import { Button, Checkbox, Form } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Image, Segment } from 'semantic-ui-react'
 
 const Signup = () => {
   const navigate = useNavigate()
@@ -82,8 +82,11 @@ const Signup = () => {
   };
 
   return (
-    <div className='modal'>
+    <>
       <Head/>
+      
+      <div className='modal'>
+      <Segment style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
       <Form onSubmit={formik.handleSubmit}>
         <Form.Field>
           <label>Email</label>
@@ -142,13 +145,14 @@ const Signup = () => {
           required="true"
         />
         </Form.Field>
-        <Form.Field>
-          <Checkbox label='I agree to the Terms and Conditions' />
-        </Form.Field>
         <Button type='submit'>Submit</Button>
         <Button type='submit' onClick={() => navigate('/')}>Cancel</Button>
       </Form>
+      </Segment>
+      <Image src='https://lh3.googleusercontent.com/pw/ABLVV86k4qM0ri9AI2PxDSuF3w9fipkD5Nem4zp_TiKGaUCzIVsspN0d5uD_aqNWOc5r5WMLStXKGfWVXURsBfLen55t8RNgV7cqfQMOGVJaq62HeY0gqjDX3wV_kAw-MR-pISdwM2CDIllOuanxBHSTc7wq-Lkdye1JTvX9AsB4hJZCh9WCxU68Xlf3bK4QEq8a6rcHAcgdvCWaMOLhWyf4wTBT3-AY22BSgDW0ALnbN128D2NaPBITQbScbvkuWCgKFBlwK_LnBA-zJetVXaR1jmY150xbYy7tpbNKYRJLhMa5sjnNbIMBvYsP39FHEj6WMJE_YS9SVEkWf9uNgs0Vm8A7QDF5t_KecLyOquqOICpKjtB2HhjRvC_p03Or4X8bsCBSX0-Atb6M_J89aWChbzftto7aUDYu_2XpDK1snN7n_o72Y0crLJDtxN90YiZVM0FFaMNG9VcJ1m848mo7zqHiDyeQ9TIBElcQ_E96oT1qQeTxc339wP_iEHxHs1uCvsJ1uwMTywt2eRLvz0Syki85SndOOSCw1VOjwfrb2Bqz1TaGNwiWnt2g2cvHkOvQbn-vLABNTwzVhRbaLW5gJu-cng8uGzDMibb3RQ5O5cNH_zAtr8Z0JxFuiIfcOcyckCBlBK7DNkCYsOoit-qUK5YLSqlsL2c1g8D5WuTxPOhV1bFkmsSUZmNQtT83qzgXF3pdNlDT3xXJZy7KNbSG1x-4sNw7LKGYHxsxA-0jJpYbAV6xzVs3ix4nLWYAVD55y8qTBOzUpQcYPFNdAgc_VlqtqjzXU4J0ut2DSJZ3pyGZsF4aonkyYzXauWQQA_NJox4gMZPX31nF2OL1IU5S8fuE5CJLqfHLG-dkQGqERPQKqD_jppmE39cq96voBMWmthfDy0k=w2163-h890-s-no-gm?authuser=0' size='large' centered />
       </div>
+      
+      </>
   );
 
 }

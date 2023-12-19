@@ -4,11 +4,11 @@ import { useDispatch } from "react-redux";
 import { setCurrentCoach, addError } from "./coachSlice";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ToastProvider, useToasts } from 'react-toast-notifications';
+import { useToasts } from 'react-toast-notifications';
 import Head from "../../components/Header";
 import { Button, Divider, Form, Grid, Segment, Image } from 'semantic-ui-react';
 
-const LoginContent = () => {
+const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { addToast } = useToasts();
@@ -60,9 +60,10 @@ const LoginContent = () => {
   });
 
   return (
-    <div className='modal'>
+   <>
       <Head />
-      <Segment placeholder>
+      <div className='modal'>
+      <Segment placeholder style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
         <Grid columns={2} relaxed='very' stackable>
           <Grid.Column>
             <Form onSubmit={formik.handleSubmit} id='formikLogin'>
@@ -94,17 +95,19 @@ const LoginContent = () => {
 
         <Divider vertical>Or</Divider>
       </Segment>
-      <Image src='https://lh3.googleusercontent.com/pw/ABLVV86MjhY7uFs-hQxgJvZDLNsjBZFLTbRxGVqTAk12jH9tA0ZhKguxyzqBr_sLdbOAr9mXy4VSbfmdnT-LagmezfAED3lE-fUnWd7Yi34_OtPMJFkogFifbqRQZTs1h0VKXNWior9wHNJnaysuwWyJye4uAkFJhiVNnvFnt71LxIf-rsKgCyYC4Rr5sX1PkDg5erNG7MJ0GHlUiMqX_pXcvw_fQQ-Zx26K9RNZgGuc1QI2Bqj75QQ57J8YYQaluR5pJwydrEXLlIQWYwOUWe_cgCkq9LOXtxln4ClHQ19GBnzVkU3c2jI232MgPo05hBY38hazkiTFb0cq6z8tqgVnhV9grA6ocH4wL9JEATtUM6FyXtFYoy-6W4tZWVM6ulec6p6bvBvaDFRfg-yhbZIyB_BhUsmQFjFsmOZLNM_VhMdym7N9EPqp3RRJ-XvAtewGfZbVsD10zkuDzbovI2kZGqh5thMQppZB5kaSgRzYZns1lxh-Z7dJbviSOoXUk0HwI63M9hGcMzSgezaIxWKshG1dvW0Porl1Pn4OhuM5KT7XWxSAMgJYffu-Y0FgAampMJQPQs_vqeffTPfHkouJWvqArfzhYwv8VLPq3BHrclGhr1Be-oiTYR5hvcl7RrGQqKxRuX3ewoJ6yyqtF-sGVV6RCwX6Y2izwGniIkKpn4CPms4GwlFfUZZ9lgww1h9Plydjx_3-34NQ4B1MxFbVizuTn8N_zDnBTjNo_s5IHJlpX4FIWT2UKw56pAlN44ciFoe375htHkVwaFDx5x0Qx6faIFZaaOXz7_tVmFUpgf2B2LqFhP7-DvYumXReNUFOlajC_rFmG9lF2ESLDyGa3E20zq952LOkQSV0HppWCV9kaqUu79gkKh_S7HIBwnMcUAR3dhA=w768-h1024-s-no-gm?authuser=0' size='medium' centered />
+      <Image src='https://lh3.googleusercontent.com/pw/ABLVV86eykuClMvHBq9EjGRJlUr8kNFbB9oPGfive53cbB7o1jdkIUxB38RhrRTITjbPgMfoNv0nHQW2LbkRpurwbkbb-eYd4CBdSgvnaOjzcBB6bw_daCn78oFNzIH399zmN3IVt8hNVFk3on4H7gzfP3EWKxsnS2bcd0Q4zVZff0UtZUOVIg8nbcc56ngDHQCn-VmJE-fzTNwgkQnmxTxrVZTwR2obewZcAzJ57aaOgF98Uh7uRIFzrdGXh9X4Huzltwvu2J-h6AnqMrq-byioQ1RWYCI0HkugABUwgXWZICKXvutJCqMeMLswlpk7UHqyprDZG5y-_RpUG6chmfR_UQkhMUbs8pqF-cgoL2IqneeS0uLuCiUNqGxVJrEW5of0TRhbN-A8oIZK3F81P6G4QLtEEMPt0RL6BNOziEUzCbyBYOv-0-Lj315RccQMWnVWxZXnMDCCl_mx22NFXs8LwvcenLIgiqAFF6qngJZR8HJlxFWJ8R6QMkfQYQg86N-dwXsY23W3vQ08EXVMwTR5KRrVIwFYO_86P69zvoiexVJauQarK8UJZdfE_Kys0hsznUeK4IfvoN-YIoMv-ASDTIeTuaDB2askfGEzzux1MVNLcDlis9WhU5HIuNaiLzzEkUmtjteMKADLYplMAHNn8Yxh6qp_6FYH3l5FcvU0sm7ehFS1chFKwNSgbldG_aI8kp4fWTw_uzHG5XvV31VoMMPeU5ZLYJTpPicaREtevCM3mjVBXwFUH_TRTEKAJ_S30EblosNg6FBTQzlLbWmBOyi82HDfAn2KMN8EEIIW7Tmmsm3k_ktR5iLviObo0Vrg92Z-G-DqBAevMpyj0hI2B52RGgafX1PtGPw6uTv204uu8ni-LNABibtuRDxTUSrQDP2htls=w768-h1024-s-no-gm?authuser=0' size='medium' centered />
+     
     </div>
+    </>
   );
 };
 
-const Login = () => {
-  return (
-    <ToastProvider>
-      <LoginContent />
-    </ToastProvider>
-  );
-};
+// const Login = () => {
+//   return (
+//     <ToastProvider>
+//       <LoginContent />
+//     </ToastProvider>
+//   );
+// };
 
 export default Login;

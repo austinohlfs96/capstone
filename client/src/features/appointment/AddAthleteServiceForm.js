@@ -13,6 +13,7 @@ import * as Yup from 'yup';
 const AddAthleteServiceForm = ({ appointment, handleModalClose, setAppointment }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const jwtToken = localStorage.getItem('jwt_token')
   const [athlete, setAthlete] = useState({});
   const [services, setServices] = useState([]);
   const coach = useSelector((state) => state.coach.data);
@@ -49,6 +50,7 @@ const AddAthleteServiceForm = ({ appointment, handleModalClose, setAppointment }
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
       },
       body: JSON.stringify(formData),
     })

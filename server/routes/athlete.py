@@ -3,6 +3,7 @@ from flask_restful import Resource
 from config import db
 from models.athletes import Athlete
 from schemas.athlete_schema import AthleteSchema
+from flask_jwt_extended import (jwt_required)
 
 
 
@@ -15,7 +16,7 @@ class Athletes(Resource):
             return athletes_schema.dump(Athlete.query)
         except Exception as e:
             return {"message": str(e)}, 500
-          
+    @jwt_required()    
     def post(self):
         try:
             data = request.json

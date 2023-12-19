@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react'
-import { Grid, Segment, Button, Form, Input } from 'semantic-ui-react'
+import { Grid, Segment, Button, Form, Input, Header } from 'semantic-ui-react'
 import {useSelector, useDispatch} from "react-redux"
 import {setCurrentCoach, deleteCoach, addError, fetchCurrentUser} from "./coachSlice"
 import { useFormik } from 'formik';
@@ -13,6 +13,7 @@ import { checkToken } from '../../utils/main';
 const EditCoachForm = () => {
   const navigate = useNavigate()
   const coach = useSelector((state) => state.coach.data)
+  const jwtToken = localStorage.getItem('jwt_token')
   const dispatch = useDispatch();
   const { addToast } = useToasts();
   const handleNewError = useCallback((error) => {
@@ -40,6 +41,7 @@ const EditCoachForm = () => {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`,
       },
       body: JSON.stringify(values),
     })
@@ -86,6 +88,7 @@ const EditCoachForm = () => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwtToken}`,
         },
       })
         .then((res) => {
@@ -111,6 +114,7 @@ const EditCoachForm = () => {
   return (
     <Grid.Column stretched width={12}>
       <Segment>
+      <Header><h1>Edit Account</h1></Header>
         <Form onSubmit={formik.handleSubmit}>
           <Form.Field>
             <label>Edit Name</label>

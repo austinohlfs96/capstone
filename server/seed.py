@@ -205,37 +205,41 @@ if __name__ == '__main__':
 #  ________________________________________Services_____________________________
         
         service1 = Service(
-            name='Wax',
-            description="Three layer swix hot wax for base durability and top speed",
+            name='Pro Compition Wax',
+            description="Professional competion three layer swix hot wax application to the base specific for current conditions, enforced base durability, and top speed",
             price=75.00,
             average_turn_around="24 hours",
+            image= "https://img.redbull.com/images/c_fill,w_1200,h_630,g_auto,f_auto,q_auto/redbullcom/2013/01/31/1331581218516_1/the-wax-room",
             is_available=True,
         )
         data.append(service1)
 
         service2 = Service(
-            name='Edge/Wax',
-            description="Side and base edge bevel and hand sharpened, and three layer swix wax",
+            name='Pro Compition Edge/Wax',
+            description="Light grind. Pro comp wax applicattion. Hand precision side edge sharpening and base bevel 1 or 2 degrees.",
             price=100.00,
             average_turn_around="24 hours",
+            image= "https://www.burton.com/static/community/advice/how-to-sharpen-snowboard-edges-a-step-by-step-guide.jpg",
             is_available=True,
         )
         data.append(service2)
 
         service3 = Service(
-            name='Machine Base Grind',
-            description="Flatten the base and adds structure to reduce suction and friction, also allows the base to absorb wax better for more longevity from your wax",
+            name='Pro Compition Tune',
+            description="Finish grind. Pro comp wax application. Basic p-tex base repair and precision edge sharpening.",
             price=150.00,
             average_turn_around="24 hours",
+             image= "https://static.wixstatic.com/media/af7f34_e502d6b8452f464e896b3789f9836f17~mv2.jpg/v1/crop/x_0,y_122,w_1512,h_1267/fill/w_480,h_404,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/ski%20structure%20pic_JPG.jpg",
             is_available=True,
         )
         data.append(service3)
 
         service4 = Service(
-            name='Competition Tune',
-            description="Base grind and redress the structure, side and base edge hand sharpen, and 10 layer hot wax with overlays for extreme longevity and unmatched top speeds",
+            name='Pro Competition Full Tune',
+            description="Base grind flat. Compition finish grind. Complete resoration of the base p-tex and welds. Pro comp wax application including baseloading and overlays. Precision hand sharpend edges.",
             price=200.00,
             average_turn_around="4 days",
+            image= "https://www.snowboarder.com/.image/t_share/MTk2MzUwOTc2MjcyNDQzMzMx/tuning-taylor-boyd-02.jpg",
             is_available=True,
         )
         data.append(service4)

@@ -4,7 +4,7 @@ import emailjs from '@emailjs/browser';
 import { Form, Input, TextArea, Button } from 'semantic-ui-react';
 import { useToasts } from 'react-toast-notifications';
 
-const ConfirmEmail = ({ appointment, handlePaymentModalClose, handleItemClick }) => {
+const ConfirmEditEmail = ({ appointment, handlePaymentModalClose, handleItemClick }) => {
   const [additionalData, setAdditionalData] = useState('');
   const coach = useSelector((state) => state.coach.data)
   const { addToast } = useToasts();
@@ -18,22 +18,10 @@ const ConfirmEmail = ({ appointment, handlePaymentModalClose, handleItemClick })
     e.preventDefault();
 
   const handleConfirm = () => {
-    handleItemClick(null, {name: "view-appointments"})
+    handleItemClick(null, {name: "athletes"})
+    console.log("test")
   }
 
-    // Send confirmation email to the user
-    // emailjs.sendForm('YOUR_SERVICE_ID', 'CONFIRMATION_TEMPLATE_ID', form.current, 'YOUR_USER_ID', {
-    //   appointment: JSON.stringify(appointment), // Convert the appointment object to a JSON string
-    //   additionalData: additionalData,
-    // })
-    //   .then((result) => {
-    //     console.log(result.text);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.text);
-    //   });
-
-    // Send notification email to yourself
     emailjs.sendForm('service_khiquxt', 'template_7lnkxmp', form.current, 'owUT0MX0X6FuHj8lg')
       .then((result) => {
         console.log(result.text);
@@ -47,19 +35,7 @@ const ConfirmEmail = ({ appointment, handlePaymentModalClose, handleItemClick })
 
     e.target.reset();
   };
-  // const sendAutoReply = () => {
-  //   // Send auto-reply email
-  //   emailjs
-  //     .sendForm('YOUR_USER_SERVICE_ID', 'AUTO_REPLY_TEMPLATE_ID', autoReplyForm.current, 'YOUR_USER_ID')
-  //     .then((result) => {
-  //       console.log(result.text);
-  //       setAutoReplySent(true);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.text);
-  //     });
-  // };
-
+  
   return (
     <>
     <form ref={form} onSubmit={sendEmail}>
@@ -95,41 +71,30 @@ const ConfirmEmail = ({ appointment, handlePaymentModalClose, handleItemClick })
         <Input
           type="text"
           name="phone"
-          // value={``}
-          // onChange={(e) => setAdditionalData(e.target.value)}
         />
       </Form.Field>
       <Form.Field>
         <label>Appointment Notes</label>
         <Input
           type="text"
-          name="notes"
-          // value={``}
-          // onChange={(e) => setAdditionalData(e.target.value)}
+          name="note"
+        />
+      </Form.Field>
+      <Form.Field>
+        <label>Appointment Edited</label>
+        <Input
+          type="text"
+          name="edit"
+          value={`Edited Appointment: ID#${appointment.id}`}
+          onChange={(e) => setAdditionalData(e.target.value)}
         />
       </Form.Field>
 
       <input type="submit" value="Send" />
     </form>
-     {/* <h2>Admin Email Form</h2>
-     <form ref={adminForm} onSubmit={sendAdminEmail}>
-       <Form.Field>
-         <label>Additional Admin Data</label>
-         <Input
-           type="text"
-           name="appiontment"
-           value={`Admin: ${appointment.coaches.name} Number of Services${appointment.athlete_services.length} ${appointment.pickup_location} ${appointment.dropoff_location} ${appointment.booking_time}`}
-           onChange={(e) => setAdditionalData(e.target.value)}
-         />
-       </Form.Field>
-
-       <Button primary type="submit">
-         Send Admin Email
-       </Button>
-     </form> */}
-     
+    
      </>
   );
 };
 
-export default ConfirmEmail;
+export default ConfirmEditEmail;
