@@ -26,7 +26,7 @@ const ConfirmEditEmail = ({ appointment, handlePaymentModalClose, handleItemClic
       .then((result) => {
         console.log(result.text);
         handlePaymentModalClose()
-        handleNewMessage('Confirmation sent. Appointment scheduled.')
+        handleNewMessage('Appointment updated. A confirmation email has been sent to your email with the updated appointment information.')
         handleConfirm()
       })
       .catch((error) => {

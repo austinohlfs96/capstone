@@ -15,7 +15,7 @@ const Gallery = () => {
       <Head />
       <div className='modal'>
       <div id="services">
-      <Segment style={{ background: 'rgba(255, 255, 255, 0.8)', width: '80%', maxWidth: '800px', height: '77vh', overflow: 'auto' }}>
+      <Segment style={{ background: 'rgba(255, 255, 255, 0.8)', width: '100%', height: '77vh', overflow: 'auto' }}>
         <h1>Gallery</h1>
         <div className="image-grid">
        

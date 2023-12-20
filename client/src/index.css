@@ -24,13 +24,18 @@
 
 html {
   height: 100vh;
+  
 }
+
+/* #root {
+  height: 100%;
+} */
 
 .App {
   margin: 0;
-  background-image: url('https://img.freepik.com/premium-vector/mountain-night-sky-nature-background-minimalist-mountain-landscape_104785-1073.jpg');
+  background-image: url('https://th.bing.com/th/id/OIG.p1xDRGNwkYeCXnxR2apa?w=1024&h=1024&rs=1&pid=ImgDetMain');
   background-size: cover;
-  height: 100vh;
+  height: 100%;
 }
 
 body {
@@ -38,6 +43,7 @@ body {
   background-image: url('https://img.freepik.com/premium-vector/mountain-night-sky-nature-background-minimalist-mountain-landscape_104785-1073.jpg');
 
   min-height: 100vh; */
+  
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -74,12 +80,14 @@ code {
 }
 
 #title{
-margin-top: 0px;
+margin-top: -15px;
+margin-bottom: 0px;
 }
 
 #headerButtons {
   display: flex;
   justify-content: space-evenly;
+  margin-top: 5px;
 }
 
 .image-grid {
@@ -93,10 +101,19 @@ margin-top: 0px;
   height: auto;
 }
 
+#loginImage {
+  margin-bottom: 57px;
+}
+
 #emailForm {
   display: table-caption;
+  margin-left: 20%;
+  margin-right: 20%;
 }
 
 #emailContainer {
-  display: inline-block
+  display: inline-block;
+  width: 40vh;
+  margin-left: 30%;
+  margin-bottom: 63px;
 }

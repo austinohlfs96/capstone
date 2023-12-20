@@ -25,7 +25,7 @@ const MenuExampleTabularOnLeft = () => {
 
     if (activeItem === 'book-appointment') {
       return (
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: '20px', marginBottom: "104px" }}>
         <Grid>
         <Grid.Column width={4}>
         <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
@@ -59,7 +59,7 @@ const MenuExampleTabularOnLeft = () => {
         </Grid.Column>
 
         <Grid.Column stretched width={12}>
-          <Segment style={{ marginTop: '-365px' }}>
+          <Segment style={{ marginTop: '-20vh', maxWidth: '664px' }}>
             <BookAppointment handleItemClick={handleItemClick}/>
           </Segment>
         </Grid.Column>
@@ -69,7 +69,7 @@ const MenuExampleTabularOnLeft = () => {
 
     if (activeItem === 'view-appointments') {
       return (
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: '20px', marginBottom: "30px" }}>
         <Grid>
         <Grid.Column width={4}>
         <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
@@ -103,7 +103,7 @@ const MenuExampleTabularOnLeft = () => {
         </Grid.Column>
 
         <Grid.Column stretched width={12}>
-        <Segment style={{ marginTop: '-365px' }}>
+        <Segment style={{ marginTop: '-30vh', maxWidth: '664px' }}>
           <CoachAppointments handleItemClick={handleItemClick}/>
           </Segment>
         </Grid.Column>
@@ -113,7 +113,7 @@ const MenuExampleTabularOnLeft = () => {
 
     if (activeItem === 'add-athlete') {
       return (
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: '20px', marginBottom: "30px" }}>
         <Grid>
         <Grid.Column width={4}>
         <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
@@ -146,7 +146,7 @@ const MenuExampleTabularOnLeft = () => {
           
         </Grid.Column>
         <Grid.Column width={12}>
-        <Segment style={{ marginTop: '-365px' }}>
+        <Segment style={{ marginTop: '-37vh', maxWidth: '664px'}}>
           <AddAthleteForm handleItemClick={handleItemClick} />
           </Segment>
         </Grid.Column>  
@@ -156,7 +156,7 @@ const MenuExampleTabularOnLeft = () => {
 
     if (activeItem === 'edit-account') {
       return (
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: '20px', marginBottom: "111px" }}>
         <Grid>
         <Grid.Column width={4}>
         <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
@@ -189,8 +189,8 @@ const MenuExampleTabularOnLeft = () => {
           
         </Grid.Column >
         <Grid.Column width={12}>
-        <Segment style={{ marginTop: '-365px' }}>
-         <EditCoachForm />
+        <Segment style={{ marginTop: '-36vh', maxWidth: '664px' }}>
+         <EditCoachForm handleItemClick={handleItemClick}/>
         </Segment>
         </Grid.Column>   
       </Grid>
@@ -198,7 +198,7 @@ const MenuExampleTabularOnLeft = () => {
     )}
 
     return (
-      <div style={{ marginTop: '20px' }}>
+      <div style={{ marginTop: '20px', marginBottom: "30px" }}>
       <Grid>
        
         <Grid.Column width={4}>
@@ -235,7 +235,7 @@ const MenuExampleTabularOnLeft = () => {
         </Grid.Column>
        
         <Grid.Column width={12}>
-          <Segment style={{ marginTop: '-365px' }}>
+          <Segment style={{ marginTop: '-30vh', maxWidth: '664px'}}>
           <AthleteCards handleItemClick={handleItemClick}/>
           </Segment>
          </Grid.Column>

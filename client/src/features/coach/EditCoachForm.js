@@ -10,7 +10,7 @@ import { getToken } from '../../utils/main';
 import { checkToken } from '../../utils/main';
 
 
-const EditCoachForm = () => {
+const EditCoachForm = ({handleItemClick}) => {
   const navigate = useNavigate()
   const coach = useSelector((state) => state.coach.data)
   const jwtToken = localStorage.getItem('jwt_token')
@@ -19,6 +19,9 @@ const EditCoachForm = () => {
   const handleNewError = useCallback((error) => {
     addToast(error, { appearance: 'error', autoDismiss: true });
   }, [addToast])
+  const handleNewMessage = useCallback((message) => {
+    addToast(message, { appearance: 'success', autoDismiss: true });
+  }, [addToast]);
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
@@ -49,6 +52,8 @@ const EditCoachForm = () => {
         if (res.ok) {
           res.json().then((updatedCoach) => {
             dispatch(setCurrentCoach(updatedCoach));
+            handleNewMessage('Account has been updated.')
+            handleItemClick(null, { name: 'athletes' });
           });
         } else {
           res.json().then((errorObj) => {

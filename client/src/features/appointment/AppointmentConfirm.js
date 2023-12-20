@@ -4,6 +4,7 @@ const ConfirmAppt = ({showPaymentModal, handlePaymentModalClose, calculateTotal,
   return (
     <Modal open={showPaymentModal} onClose={handlePaymentModalClose}>
         <Modal.Header>Confirm Appointment</Modal.Header>
+        <h2 style={{ color: 'red' }}>Please double check all the information below and add you phone number and additonal notes.</h2>
           <Modal.Content>
           <p>Pick-up: {appointment.pickup_location}</p>
           <p>Drop-off: {appointment.dropoff_location}</p>

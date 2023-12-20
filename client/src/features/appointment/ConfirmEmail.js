@@ -38,7 +38,7 @@ const ConfirmEmail = ({ appointment, handlePaymentModalClose, handleItemClick })
       .then((result) => {
         console.log(result.text);
         handlePaymentModalClose()
-        handleNewMessage('Confirmation sent. Appointment scheduled.')
+        handleNewMessage('Appointment scheduled. A confirmation email has been sent to your email.')
         handleConfirm()
       })
       .catch((error) => {

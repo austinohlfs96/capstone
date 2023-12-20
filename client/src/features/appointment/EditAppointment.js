@@ -62,7 +62,6 @@ const EditAppointment = ( { setIsEditModalOpen,  setSelectedAppointment, selecte
           res.json().then(createdAppointment => {
             dispatch(patchAppointment(createdAppointment));
             setSelectedAppointment(createdAppointment);
-            handleNewMessage('App edit test pass')
             // setFormSubmitted(true);
             setShowPaymentModal(true);
           })
@@ -241,8 +240,13 @@ const EditAppointment = ( { setIsEditModalOpen,  setSelectedAppointment, selecte
         </Modal.Content>
       </Modal>
       <Modal open={showPaymentModal} onClose={handlePaymentModalClose}>
-        <Modal.Header>Add Athlete Service</Modal.Header>
+        <Modal.Header>Confirm Appointment Update</Modal.Header>
+        <h2 style={{ color: 'red' }}>Please double check all the information below and add you phone number and additonal notes.</h2>
         <Modal.Content>
+        <p>Pick-up: {selectedAppointment.pickup_location}</p>
+          <p>Drop-off: {selectedAppointment.dropoff_location}</p>
+          <p>Pickup date: {selectedAppointment.booking_time}</p>
+          <h3>Athlete Services: {selectedAppointment.athlete_services.length}</h3>
           <ConfirmEditEmail  showPaymentModal={showPaymentModal} handlePaymentModalClose={handlePaymentModalClose} appointment={selectedAppointment} handleItemClick={handleItemClick}/>
         </Modal.Content>
       </Modal>

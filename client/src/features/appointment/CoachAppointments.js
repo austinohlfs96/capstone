@@ -1,7 +1,7 @@
 import {useEffect, useState, useCallback} from "react"
 import {useSelector, useDispatch } from "react-redux"
 import { useNavigate } from 'react-router-dom';
-import { Card, Button, Modal, Form, TextArea, Header, Input } from 'semantic-ui-react'
+import { Card, Button, Modal, Form, TextArea, Header, Input, Segment } from 'semantic-ui-react'
 import { deleteAppointmentsToCoach, patchAppointment, patchAthlete, fetchCurrentUser, addError } from '../coach/coachSlice';
 import { getToken } from '../../utils/main';
 import { checkToken } from '../../utils/main';
@@ -142,6 +142,7 @@ const CoachAppointments = ({handleItemClick}) => {
 
   return (
     <>
+    <Segment style={{ background: 'rgba(255, 255, 255, 0.8)', height: '77vh', overflow: 'auto' }}>
     <Header><h1>Appointments</h1>
     <Button secondary style={{ position: 'absolute', top: '5px', right: '5px' }}
           onClick={handleBookAppointment}
@@ -169,6 +170,7 @@ const CoachAppointments = ({handleItemClick}) => {
            
           </Card.Content>
         </Card>
+        
       ))}
     </Card.Group>
 
@@ -237,7 +239,7 @@ const CoachAppointments = ({handleItemClick}) => {
       {isEditModalOpen && (
       <EditAppointment setIsEditModalOpen={setIsEditModalOpen} setSelectedAppointment={setSelectedAppointment} isEditModalOpen={isEditModalOpen} selectedAppointment={selectedAppointment} handleItemClick={handleItemClick}/>
       )} 
-     
+     </Segment>
     </>
     
   )

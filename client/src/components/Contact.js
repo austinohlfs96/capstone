@@ -11,7 +11,8 @@ const Contact = () => {
       <Head/>
       <div className='modal'>
       <Grid.Column width={12}>
-      <Segment id="emailContainer">
+      <Segment id="emailContainer" centered>
+        <h1>Contact Form</h1>
         <EmailForm/>
       </Segment>
       </Grid.Column>

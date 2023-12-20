@@ -45,7 +45,7 @@ function Head() {
             } else {
               
               res.json().then(errorObj => {
-                navigate('/')
+                // navigate('/')
                 dispatch(addError(errorObj.message));
                 // handleNewError("You have been signed out please sign in to use account services");
               });
@@ -93,7 +93,7 @@ function Head() {
     <Image src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Valknut.svg/1200px-Valknut.svg.png' size='small' />
       Æsir Performance Tunes
     </Header>
-    <Header id='headerButtons' as='h3' textAlign='center' marginTop= '10px'>
+    <Header id='headerButtons' as='h3' textAlign='center'>
     <Button secondary onClick={() => navigate('/')}>About</Button>
     <Button secondary onClick={() => navigate('/services')}>Services</Button>
     <Button secondary onClick={() => navigate('/gallery')}>Gallery</Button>

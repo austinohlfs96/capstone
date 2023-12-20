@@ -35,35 +35,39 @@ const EmailForm = () => {
   };
 
   return (
-    
     <form ref={form} onSubmit={sendEmail} id="emailForm">
-    <Form.Field>
-    <label>First name</label>
-    <input type="text" name="user_first_name" />
-    </Form.Field>
-    <Form.Field>
-    <label>Last name</label>
-    <input type="text" name="user_last_name" />
-    </Form.Field>
-    <Form.Field>
-    <label>Email</label>
-    <input type="email" name="user_email" />
-    </Form.Field>
-    <Form.Field>
-    <label>Phone</label>
-    <input type="tel" name="user_phone" />
-    </Form.Field>
-    <Form.Field>
-    <label>Subject</label>
-    <input type="text" name="user_subject" />
-    </Form.Field>
-    <Form.Field>
-    <label>Message</label>
-    <textarea name="message" />
-    <input type="submit" value="Send" />
-    </Form.Field>
-  </form>
-  
+      <Grid columns={1} stackable>
+        <Grid.Column>
+          <Form.Field>
+            <label>First name</label>
+            <Input type="text" name="user_first_name" width={20} /> {/* Set width to 8 columns out of 16 */}
+          </Form.Field>
+          <Form.Field>
+            <label>Last name</label>
+            <Input type="text" name="user_last_name" width={8} /> {/* Set width to 8 columns out of 16 */}
+          </Form.Field>
+          <Form.Field>
+            <label>Email</label>
+            <Input type="email" name="user_email" width={16} /> {/* Set width to 16 columns out of 16 for full width */}
+          </Form.Field>
+        </Grid.Column>
+        <Grid.Column>
+          <Form.Field>
+            <label>Phone</label>
+            <Input type="tel" name="user_phone" width={8} /> {/* Set width to 8 columns out of 16 */}
+          </Form.Field>
+          <Form.Field>
+            <label>Subject</label>
+            <Input type="text" name="user_subject" width={8} /> {/* Set width to 8 columns out of 16 */}
+          </Form.Field>
+          <Form.Field>
+            <label>Message</label>
+            <TextArea name="message" width={16} /> {/* Set width to 16 columns out of 16 for full width */}
+          </Form.Field>
+        </Grid.Column>
+      </Grid>
+      <Button type="submit">Send</Button>
+    </form>
   );
 };
 
