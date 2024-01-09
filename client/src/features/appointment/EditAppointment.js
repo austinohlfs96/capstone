@@ -241,11 +241,12 @@ const EditAppointment = ( { setIsEditModalOpen,  setSelectedAppointment, selecte
       </Modal>
       <Modal open={showPaymentModal} onClose={handlePaymentModalClose}>
         <Modal.Header>Confirm Appointment Update</Modal.Header>
-        <h2 style={{ color: 'red' }}>Please double check all the information below and add you phone number and additonal notes.</h2>
+        <h2 style={{ color: 'red', textAlign: 'center' }}>Please double check all the information below and add you phone number and additonal notes.</h2>
         <Modal.Content>
-        <p>Pick-up: {selectedAppointment.pickup_location}</p>
-          <p>Drop-off: {selectedAppointment.dropoff_location}</p>
-          <p>Pickup date: {selectedAppointment.booking_time}</p>
+        <h3>Appointment ID #{selectedAppointment.id}</h3>
+        <h3>Pick-up: {selectedAppointment.pickup_location}</h3>
+          <h3>Drop-off: {selectedAppointment.dropoff_location}</h3>
+          <h3>Pickup date: {selectedAppointment.booking_time}</h3>
           <h3>Athlete Services: {selectedAppointment.athlete_services.length}</h3>
           <ConfirmEditEmail  showPaymentModal={showPaymentModal} handlePaymentModalClose={handlePaymentModalClose} appointment={selectedAppointment} handleItemClick={handleItemClick}/>
         </Modal.Content>

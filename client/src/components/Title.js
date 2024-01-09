@@ -9,7 +9,7 @@ const Title = () => {
       <Head/>
       <div className='modal'>
       <Segment style={{ background: 'rgba(255, 255, 255, 0.9)' }}>
-      <h1>About</h1>
+      <h1>About Page</h1>
     <Image src='https://www.usskiandsnowboard.org/sites/default/files/paragraph/single-image-caption/2020-01/maggiepodium%20.jpg' size='medium' floated='left' />
     <h4>
     Welcome to Æsir Performance Tunes, your premier destination for professional performance ski and snowboard tuning. At Æsir Performance Tunes, we take pride in our commitment to excellence and our passion for elevating winter sports performance. With a dedicated team of skilled technicians and state-of-the-art machinery, we offer top-tier tuning services tailored for athletes and coaches seeking to outperform the competition.

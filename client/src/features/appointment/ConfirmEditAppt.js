@@ -37,7 +37,7 @@ const ConfirmEditEmail = ({ appointment, handlePaymentModalClose, handleItemClic
   };
   
   return (
-    <>
+    <div style={{ display: 'table-caption' }}>
     <form ref={form} onSubmit={sendEmail}>
       <Form.Field>
         <label>Additional Data</label>
@@ -80,20 +80,22 @@ const ConfirmEditEmail = ({ appointment, handlePaymentModalClose, handleItemClic
           name="note"
         />
       </Form.Field>
+      <div style={{ display: 'none' }}>
       <Form.Field>
         <label>Appointment Edited</label>
         <Input
+          hidden="true"
           type="text"
           name="edit"
           value={`Edited Appointment: ID#${appointment.id}`}
           onChange={(e) => setAdditionalData(e.target.value)}
         />
       </Form.Field>
-
+      </div>
       <input type="submit" value="Send" />
     </form>
     
-     </>
+     </div>
   );
 };
 

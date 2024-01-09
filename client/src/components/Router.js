@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import LandingPage from "./LandingPage";
 import Title from "./Title";
 import Signup from '../features/coach/Signup';
 import Login from '../features/coach/Login';
@@ -12,7 +13,8 @@ import Gallery from "./Gallery"
 function Router() {
   const routes = (
     <>
-      <Route path='/' element={<Title/>} />,
+      <Route path='/' element={<LandingPage/>} />,
+      <Route path='/about' element={<Title/>} />,
       <Route path='/login' element={<Login/>} />,
       <Route path='/signup' element={<Signup/>} />,
       <Route path='/userhome' element={<UserHome/>} />,

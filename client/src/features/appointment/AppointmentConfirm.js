@@ -4,20 +4,21 @@ const ConfirmAppt = ({showPaymentModal, handlePaymentModalClose, calculateTotal,
   return (
     <Modal open={showPaymentModal} onClose={handlePaymentModalClose}>
         <Modal.Header>Confirm Appointment</Modal.Header>
-        <h2 style={{ color: 'red' }}>Please double check all the information below and add you phone number and additonal notes.</h2>
+        <h2 style={{ color: 'red', textAlign: 'center' }}>Please double check all the information below and add you phone number and additonal notes.</h2>
           <Modal.Content>
-          <p>Pick-up: {appointment.pickup_location}</p>
-          <p>Drop-off: {appointment.dropoff_location}</p>
-          <p>Pickup date: {appointment.booking_time}</p>
+          <h3>Appointment ID #{appointment.id}</h3>
+        <h3>Pick-up: {appointment.pickup_location}</h3>
+          <h3>Drop-off: {appointment.dropoff_location}</h3>
+          <h3>Pickup date: {appointment.booking_time}</h3>
           <h3>Athlete Services: {appointment.athlete_services.length}</h3>
-          <Card.Group>
+          {/* <Card.Group>
             {appointment.athlete_services.map((service) => (
               <Card key={service.id}>
                 <Card.Content>
                 {/* <Button color="red" style={{ position: 'absolute', top: '5px', right: '5px' }} onClick={() => handleDeleteService(service)}>
                     X
                   </Button> */}
-                  <Card.Header>{service.services.name}: ${service.services.price}</Card.Header>
+                  {/* <Card.Header>{service.services.name}: ${service.services.price}</Card.Header>
                   <Card.Meta>Athlete: {service.athletes.name}</Card.Meta>
                   <Card.Meta>Discipline: {service.discipline}</Card.Meta>
                   <Card.Description>{service.notes}</Card.Description>
@@ -25,7 +26,7 @@ const ConfirmAppt = ({showPaymentModal, handlePaymentModalClose, calculateTotal,
               </Card>
             ))}
           </Card.Group>
-          <p>Estimated Total: ${calculateTotal()}</p>
+          <p>Estimated Total: ${calculateTotal()}</p> */} 
           <ConfirmEmail appointment={appointment} handlePaymentModalClose={handlePaymentModalClose} handleItemClick={handleItemClick}/>
           </Modal.Content>
         </Modal>
