@@ -1,22 +1,27 @@
 import { Routes, Route } from "react-router-dom";
+import LandingPage from "./LandingPage";
 import Title from "./Title";
 import Signup from '../features/coach/Signup';
 import Login from '../features/coach/Login';
 import Error from './Error';
 import UserHome from '../features/coach/UserHome';
 import Services from "./Services";
-import EditAthlete from "../features/athlete/EditAthlete";
-
+import Contact from "./Contact";
+import AthleteSpotlight from "./AthleteSpotlight";
+import Gallery from "./Gallery"
 
 function Router() {
   const routes = (
     <>
-      <Route path='/' element={<Title/>} />,
+      <Route path='/' element={<LandingPage/>} />,
+      <Route path='/about' element={<Title/>} />,
       <Route path='/login' element={<Login/>} />,
       <Route path='/signup' element={<Signup/>} />,
       <Route path='/userhome' element={<UserHome/>} />,
       <Route path='/services' element={<Services/>} />,
-      <Route path="/editathlete" element={<EditAthlete/>}/>,
+      <Route path='/contact' element={<Contact/>}/>,
+      <Route path="/athletespotlight" element={<AthleteSpotlight/>}/>,
+      <Route path='/gallery' element={<Gallery/>}/>,
 
     </>
   )

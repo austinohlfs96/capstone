@@ -1,37 +1,20 @@
 import MenuExampleTabularOnLeft from './NavBar'
 import { useNavigate } from 'react-router-dom'
 import {useDispatch, useSelector} from "react-redux"
-import {setCurrentCoach} from "./coachSlice"
-import { useEffect, useState, useCallback } from 'react'
-import AlertBar from '../../components/AlertBar'
+import {setCurrentCoach, addError} from "./coachSlice"
+import { useEffect, useCallback } from 'react'
 import Head from "../../components/Header"
-import { Image } from 'semantic-ui-react'
-
+import { Image, Sticky } from 'semantic-ui-react'
+import { useToasts } from 'react-toast-notifications';
 
 const UserHome = () => {
-  
   const navigate = useNavigate()
-  const [error, setError] = useState("");
   const dispatch = useDispatch()
+  const { addToast } = useToasts();
   const coach = useSelector((state) => state.coach.data)
-  // const [currentUser, setCurrentUser] = useState({})
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
-  // const [coach, setCoach] = useState(null)
-  console.log(coach)
-  // const updateCoach = (coach) => setCoach(coach)
-
-  useEffect(() => {
-    setSnackbarOpen(false)
-  }, [])
-
   const handleNewError = useCallback((error) => {
-    setError(error);
-  }, []);
-
-  
-
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
 
   useEffect(() => {
     if (!coach) {
@@ -57,52 +40,24 @@ const UserHome = () => {
                 localStorage.setItem("jwt_token", resObj.jwt_token)
               })
             } else {
-              res.json().then(errorObj => handleNewError(errorObj.msg))
+              
+              res.json().then(errorObj => {
+                navigate('/')
+                dispatch(addError(errorObj.message));
+                handleNewError("You have been signed out please sign in to use account services");
+              });
             }
           })
         } else {
           res.json().then(errorObj => handleNewError(errorObj.message || errorObj.msg))
         }
       })
-      .catch(handleNewError)
+      .catch(error => {
+        dispatch(addError(error));
+        handleNewError(error);
+      });
     }
   }, [handleNewError, coach])
-
-
-
-
-  // const handleDelete = () => {
-  //   const choice = prompt('Are you sure? There is no coming back from this!\nType YES to continue.');
-  //   if (!choice) {
-  //     return;
-  //   } else if (choice.toLowerCase() === 'yes') {
-  //     const id = currentUser.id;
-  //     fetch(`/users/${id}`, {
-  //       method: 'DELETE',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       }
-  //     })
-  //       .then(() => {
-  //         setSnackbarMessage('Account deleted! We wish you the best.');
-  //         setSnackbarSeverity('success');
-  //         setSnackbarOpen(true);
-  //         return Promise.resolve();
-  //       })
-  //       .then(() => {
-  //         navigate('/');
-  //       })
-  //       .catch(error => {
-  //         setSnackbarMessage(`Error deleting account: ${error.message}`);
-  //         setSnackbarSeverity('error');
-  //         setSnackbarOpen(true);
-  //       });
-  //   }
-  // };
-
-  // const handleCloseSnackbar = () => {
-  //   setSnackbarOpen(false);
-  // };
 
 console.log(coach)
   const title = 'USER HOME'
@@ -111,14 +66,18 @@ console.log(coach)
       <Head coach={coach}/>
       {/*  */}
       
+      
       {coach && (
   <>
-  <Image src={coach.profile_picture} size='small' />
-    <h1>{coach.name}</h1>
+
+  <Image src={coach.profile_picture} size ='small' style={{margin: '15px'}}/>
+  <h1 style={{ color: 'white' }}>{coach.name}</h1>
+  <h2 style={{ color: 'white' }}>Team: {coach.team}</h2>
+
   </>
 )}
       <MenuExampleTabularOnLeft/>
-        
+      
     </div>
   )
 }

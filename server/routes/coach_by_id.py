@@ -3,6 +3,7 @@ from flask_restful import Resource
 from config import db
 from models.coaches import Coach
 from schemas.coaches_schema import CoachSchema
+from flask_jwt_extended import (jwt_required)
 
 coach_schema = CoachSchema(session=db.session)
 coaches_schema_schema = CoachSchema(many=True, session=db.session)
@@ -16,13 +17,13 @@ class CoachById(Resource):
             return {"message": "Athlete service not found"}, 404
         except Exception as e:
             return {"message": str(e)}, 500
-          
+    @jwt_required()
     def patch(self, id):
         if coach := db.session.get(Coach, id):
             try:
                 data = request.json
                 coach_schema.validate(data)
-                coach = coach_schema.load(data, instance=coach, partial=True)
+                coach = coach_schema.load(data, instance=coach, partial=('profile_picture' in data))
                 db.session.commit()
                 return coach_schema.dump(coach)
             except Exception as e:
@@ -30,7 +31,7 @@ class CoachById(Resource):
                 return {"message": str(e)}, 400
         return {"message": "Coach not found"}, 404
       
-      
+    @jwt_required()  
     def delete(self, id):
       if coach := db.session.get(Coach, id):
         try:

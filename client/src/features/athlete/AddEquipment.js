@@ -1,136 +1,177 @@
-import React, {useState} from 'react';
-import {  useDispatch } from 'react-redux';
-import { Button, Form, Input } from 'semantic-ui-react';
-import {  patchAthlete } from '../coach/coachSlice';
 
+import React, {useCallback, useEffect} from 'react';
+import { useDispatch } from 'react-redux';
+import { Button, Form, Input } from 'semantic-ui-react';
+import { patchAthlete, addError, fetchCurrentUser } from '../coach/coachSlice';
+import { useFormik } from 'formik';
+import { getToken, checkToken } from '../../utils/main';
+import * as Yup from 'yup';
+import { useToasts } from 'react-toast-notifications';
 
 const AddEquipment = ({ athlete, onCloseAddEquipmentModal }) => {
-
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    athlete_id: athlete.id,
-    athlete_name: athlete.name,
-    type: '',
-    manifacture: '',
-    model: '',
-    year: '',
-    length: '',
-    width: '',
+  const { addToast } = useToasts();
+  const handleNewError = useCallback((error) => {
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
+  const validationSchema = Yup.object().shape({
+    type: Yup.string().required('Type is required'),
+    manifacture: Yup.string().required('Manufacturer is required'),
+    model: Yup.string().required('Model is required'),
+    year: Yup.string().required('Year is required'),
+    length: Yup.string().required('Length is required'),
+    width: Yup.string().required('Width is required'),
   });
 
-
-  const handleAddEquipmentFormSubmit = (athlete) => {
-    debugger
-    // Make a POST request to the server
-    const formDataWithoutExcludedField = { ...formData };
-    delete formDataWithoutExcludedField.athlete_name;
-    fetch('http://127.0.0.1:5555/equipment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formDataWithoutExcludedField),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Failed to add equipment');
+  const sendRequest = (values) => {
+    if (!getToken() || !checkToken()) {
+      handleNewError('User not logged in');
+      return;
+    }
+    const formDataWithoutExcludedField = { ...values };
+      delete formDataWithoutExcludedField.athlete_name;
+      fetch('http://127.0.0.1:5555/equipment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataWithoutExcludedField),
+      })
+      .then(res => {
+        if (res.ok) {
+            res.json().then(equipment => {
+              const updatedAthlete = {
+                  ...athlete,
+                  equipment: [...athlete.equipment, equipment],
+                         };
+              dispatch(patchAthlete(updatedAthlete));
+              onCloseAddEquipmentModal();
+            })
+        } else {
+            res.json().then(errorObj => {
+              console.log("error", errorObj)
+            dispatch(addError(errorObj.message));
+            handleNewError(errorObj.message);
+          });
         }
-        return res.json();
-      })
-      .then((equipment) => {
-        // Handle the response (you might want to update the state or perform other actions)
-        console.log('Equipment added successfully:', equipment);
-        dispatch(patchAthlete(athlete))
-        onCloseAddEquipmentModal(); // Close the modal after submitting
-      })
-      .catch((error) => {
-        console.error('Error adding equipment:', error.message);
-      });
-  };
+        })}
 
+  const formik = useFormik({
+    initialValues: {
+      athlete_id: athlete.id,
+      athlete_name: athlete.name,
+      type: '',
+      manifacture: '',
+      model: '',
+      year: '',
+      length: '',
+      width: '',
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      sendRequest(values)
+     
+    }})
+        
 
-  const title = 'USER HOME'
   return (
-    
-    <Form onSubmit={handleAddEquipmentFormSubmit}>
-    <Form.Field>
-      <label>Athlete Name</label>
-      <Input
-        name="athlete_name"
-        placeholder="Enter equipment name"
-        value={formData.athlete_name}
-        // onChange={(e, { athlete_name, value }) => setFormData({ ...formData, [athlete_name]: value })}
-      />
-    </Form.Field>
-    <Form.Field>
-      <label>Type</label>
-      <Input
-        name="type"
-        placeholder="Enter equipment type"
-        value={formData.type}
-        onChange={(e, { value }) => setFormData({ ...formData, type: value })}
-      />
-    </Form.Field>
-    <Form.Field>
-      <label>Manifacturer</label>
-      <Input
-        name="manifacture"
-        placeholder="Enter equipment manifacture"
-        value={formData.manifacture}
-        onChange={(e, { value }) =>
-          setFormData({ ...formData, manifacture: value })
-        }
-      />
-    </Form.Field>
-    <Form.Field>
-      <label>Model</label>
-      <Input
-        name="model"
-        placeholder="Enter equipment model"
-        value={formData.model}
-        onChange={(e, { value }) =>
-          setFormData({ ...formData, model: value })
-        }
-      />
-    </Form.Field>
-    <Form.Field>
-      <label>Year</label>
-      <Input
-        name="year"
-        placeholder="Enter equipment year"
-        value={formData.year}
-        onChange={(e, { value }) =>
-          setFormData({ ...formData, year: value })
-        }
-      />
-    </Form.Field>
-    <Form.Field>
-      <label>Length</label>
-      <Input
-        name="length"
-        placeholder="Enter equipment length"
-        value={formData.length}
-        onChange={(e, { value }) =>
-          setFormData({ ...formData, length: value })
-        }
-      />
-    </Form.Field>
-    <Form.Field>
-      <label>Width</label>
-      <Input
-        name="width"
-        placeholder="Enter equipment width"
-        value={formData.width}
-        onChange={(e, { value }) =>
-          setFormData({ ...formData, width: value })
-        }
-      />
-    </Form.Field>
-    <Button type='submit'>Add Equipment</Button>
-    <Button onClick={onCloseAddEquipmentModal}>Close</Button>
-  </Form> 
-
-  )
-}
+    <Form onSubmit={formik.handleSubmit}>
+      <Form.Field>
+        <label>Athlete Name</label>
+        <Input
+          name="athlete_name"
+          placeholder="Enter equipment name"
+          value={formik.values.athlete_name}
+          readOnly
+        />
+      </Form.Field>
+      <Form.Field>
+        <label>Type</label>
+        <Input
+          name="type"
+          placeholder="Enter equipment type"
+          value={formik.values.type}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.touched.type && formik.errors.type ? (
+          <div style={{ color: 'red' }}>{formik.errors.type}</div>
+        ) : null}
+      </Form.Field>
+      <Form.Field>
+        <label>Manufacturer</label>
+        <Input
+          name="manifacture"
+          placeholder="Enter equipment manufacturer"
+          value={formik.values.manifacture}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.touched.manifacture && formik.errors.manifacture ? (
+          <div style={{ color: 'red' }}>{formik.errors.manifacture}</div>
+        ) : null}
+      </Form.Field>
+      <Form.Field>
+        <label>Model</label>
+        <Input
+          name="model"
+          placeholder="Enter equipment model"
+          value={formik.values.model}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.touched.model && formik.errors.model ? (
+          <div style={{ color: 'red' }}>{formik.errors.model}</div>
+        ) : null}
+      </Form.Field>
+      <Form.Field>
+        <label>Year</label>
+        <Input
+          name="year"
+          placeholder="Enter equipment year"
+          value={formik.values.year}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.touched.year && formik.errors.year ? (
+          <div style={{ color: 'red' }}>{formik.errors.year}</div>
+        ) : null}
+      </Form.Field>
+      <Form.Field>
+        <label>Length</label>
+        <Input
+          name="length"
+          placeholder="Enter equipment length"
+          value={formik.values.length}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.touched.length && formik.errors.length ? (
+          <div style={{ color: 'red' }}>{formik.errors.length}</div>
+        ) : null}
+      </Form.Field>
+      <Form.Field>
+        <label>Width</label>
+        <Input
+          name="width"
+          placeholder="Enter equipment width"
+          value={formik.values.width}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.touched.width && formik.errors.width ? (
+          <div style={{ color: 'red' }}>{formik.errors.width}</div>
+        ) : null}
+      </Form.Field>
+      <Button type="submit">Add Equipment</Button>
+      <Button onClick={onCloseAddEquipmentModal}>Close</Button>
+    </Form>
+  );
+};
 
 export default AddEquipment;

@@ -3,6 +3,7 @@ from flask_restful import Resource
 from config import db
 from models.athletes import Athlete
 from schemas.athlete_schema import AthleteSchema
+from flask_jwt_extended import (jwt_required)
 
 athlete_schema = AthleteSchema(session=db.session)
 athlete_schema_schema = AthleteSchema(many=True, session=db.session)
@@ -16,7 +17,7 @@ class AthleteById(Resource):
             return {"message": "Athlete not found"}, 404
         except Exception as e:
             return {"message": str(e)}, 500
-          
+    @jwt_required()     
     def patch(self, id):
         if athlete := db.session.get(Athlete, id):
             try:
@@ -30,7 +31,7 @@ class AthleteById(Resource):
                 return {"message": str(e)}, 400
         return {"message": "Athlete not found"}, 404
       
-      
+    @jwt_required()  
     def delete(self, id):
         if athlete := db.session.get(Athlete, id):
             try:

@@ -1,42 +1,30 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect,useCallback } from 'react';
+import { useDispatch } from "react-redux";
+import { useState, useCallback } from 'react';
+import { addError } from "./coachSlice";
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import AlertBar from '../../components/AlertBar'
+import { useToasts } from 'react-toast-notifications';
 import Head from "../../components/Header";
-import { Button, Checkbox, Form } from 'semantic-ui-react'
+import { Button, Checkbox, Form, Image, Segment } from 'semantic-ui-react'
 
 const Signup = () => {
   const navigate = useNavigate()
-  
-  
-
-  const [newUser, setNewUser] = useState({})
-  const [email, setEmail] = useState('')
-  const [pass, setPass] = useState('')
-  const [confirmPass, setConfirmPass] = useState('')
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const dispatch = useDispatch()
+  const { addToast } = useToasts();
   const [coach, setCoach] = useState(null)
-
   const updateCoach = (coach) => setCoach(coach)
-  const [error, setError] = useState("");
-  
-
-  useEffect(() => {
-    setSnackbarOpen(false)
-  }, [])
 
   const handleNewError = useCallback((error) => {
-    setError(error);
-  }, []);
+    addToast(error, { appearance: 'error', autoDismiss: true });
+  }, [addToast]);
 
   const formSchema = yup.object().shape({
     email: yup.string().required('Please enter your email').typeError('Please enter a string.'),
     password: yup.string().required('Please enter a password.').typeError('Please enter a string.'),
     confirmpassword: yup.string().required('Please enter the same password.').typeError('Please enter a string.'), 
-  })
+    profile_picture: yup.string().url('Please enter a valid URL for the profile picture'),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -45,18 +33,18 @@ const Signup = () => {
       team: "",
       password: "",
       confirmpassword: "",
+      profile_picture: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/2048px-Windows_10_Default_Profile_Picture.svg.png"
     },
     validationSchema: formSchema,
     onSubmit: async (values) => {
+      console.log("val", values)
       if (values.password !== values.confirmpassword) {
-        setSnackbarMessage("Password must match.");
-        setSnackbarSeverity("error");
-        setSnackbarOpen(true);
+        handleNewError("Password must match.");
         return;
       }
   
       try {
-        const response = await fetch(`http://127.0.0.1:5555/auth/register`, {
+        fetch(`http://127.0.0.1:5555/auth/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -73,20 +61,18 @@ const Signup = () => {
               })
               navigate('/userhome');
           } else {
-              res.json().then(errorObj => handleNewError(errorObj.message))
+              res.json().then(errorObj => {
+              dispatch(addError(errorObj.message));
+              handleNewError(errorObj.message);
+            });
           }
       })
       } catch (error) {
         console.error('An unexpected error occurred', error);
-        setSnackbarMessage('An unexpected error occurred.');
-        setSnackbarSeverity('error');
-        setSnackbarOpen(true);
+        handleNewError(error);
       }
     },
   });
-  
-
-  
 
   const handleInputChange = (e) => {
     const trimmedValue = e.target.value.trim();
@@ -95,13 +81,12 @@ const Signup = () => {
 
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-  
   return (
-    <div className='modal'>
+    <>
       <Head/>
+      
+      <div className='modal'>
+      <Segment style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
       <Form onSubmit={formik.handleSubmit}>
         <Form.Field>
           <label>Email</label>
@@ -160,22 +145,17 @@ const Signup = () => {
           required="true"
         />
         </Form.Field>
-        <Form.Field>
-          <Checkbox label='I agree to the Terms and Conditions' />
-        </Form.Field>
         <Button type='submit'>Submit</Button>
         <Button type='submit' onClick={() => navigate('/')}>Cancel</Button>
       </Form>
-      <AlertBar
-          message={snackbarMessage}
-          setAlertMessage={setSnackbarMessage}
-          snackType={snackbarSeverity}
-          handleSnackType={setSnackbarSeverity}
-          onClose={handleCloseSnackbar}
-      />
+      </Segment>
+      <Image src='https://images.squarespace-cdn.com/content/v1/58b755102994cae144cde267/1488847126298-4N5ZM6OJDML7QTP15U2O/DropInZone_PeacePark2016_Blotto_07697.jpg?format=2500w' size='large' centered />
       </div>
+      
+      </>
   );
 
 }
+
 
 export default Signup;

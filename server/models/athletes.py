@@ -42,9 +42,9 @@ class Athlete(db.Model, SerializerMixin):
         raise AssertionError("Athlete name is required")
       elif not isinstance(value, str):
         raise Exception('Name must be a string.')
-      elif len(value) < 2:
+      elif len(value.strip()) < 2:
         raise ValueError("Name must be more than 2 characters")
-      elif len(value) >= 22:
+      elif len(value.strip()) >= 22:
         raise ValueError("Name must be less than 22 characters")
       return value
     
@@ -66,9 +66,9 @@ class Athlete(db.Model, SerializerMixin):
         raise AssertionError("Athlete height is required")
       elif not isinstance(value, str):
         raise Exception('Height must be a string.')
-      elif len(value) < 3:
+      elif len(value.strip()) < 3:
         raise ValueError("Height must be atleast 3 characters")
-      elif len(value) > 15:
+      elif len(value.strip()) > 15:
         raise ValueError("Height cannot be more than 15 characters")
       return value
     
@@ -78,7 +78,7 @@ class Athlete(db.Model, SerializerMixin):
         raise AssertionError("Athlete weight is required")
       elif not isinstance(value, str):
             raise ValueError('Weight must be a string.')
-      elif len(value) < 2 or len(value) > 15:
+      elif len(value.strip()) < 2 or len(value.strip()) > 15:
           raise ValueError("Weight size must be between 2 and 15 characters")
       return value
   
@@ -87,10 +87,10 @@ class Athlete(db.Model, SerializerMixin):
       if not value:
         raise AssertionError("Athlete boot size is required")
       elif not isinstance(value, str):
-        raise Exception('Boot size must be a ingeter.')
-      elif len(value) < 1:
-        raise ValueError("Boot size must be atleast 2 characters")
-      elif len(value) > 15:
+        raise Exception('Boot size must be a string.')
+      elif len(value.strip()) < 1:
+        raise ValueError("Boot size must be atleast 1 characters")
+      elif len(value.strip()) > 15:
         raise ValueError("Boot size cannot be more than 10 characters")
       return value
     
@@ -98,15 +98,15 @@ class Athlete(db.Model, SerializerMixin):
   def validate_gender(self, _, value):
         if not isinstance(value, str):
             raise ValueError('Gender must be a string.')
-        elif len(value) < 2 or len(value) > 15:
-            raise ValueError("Gender size must be between 2 and 15 characters")
+        elif len(value.strip()) < 2 or len(value.strip()) > 15:
+            raise ValueError("Gender must be between 2 and 15 characters")
         return value
     
   @validates("stance")
   def validate_stance(self, _, value):
       if not isinstance(value, str):
             raise ValueError('Stance must be a string.')
-      elif len(value) < 2 or len(value) > 15:
+      elif len(value.strip()) < 2 or len(value.strip()) > 15:
           raise ValueError("Stance size must be between 2 and 15 characters")
       return value
   
@@ -116,7 +116,7 @@ class Athlete(db.Model, SerializerMixin):
         raise AssertionError("Athlete discipline is required")
       elif not isinstance(value, str):
             raise ValueError('Gender must be a string.')
-      elif len(value) < 2 or len(value) > 40:
+      elif len(value.strip()) < 2 or len(value.strip()) > 40:
           raise ValueError("Gender size must be between 2 and 15 characters")
       return value
     

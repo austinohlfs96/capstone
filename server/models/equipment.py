@@ -36,9 +36,9 @@ class Equipment(db.Model, SerializerMixin):
         raise AssertionError("Equipment type is required")
       elif not isinstance(value, str):
         raise Exception('Type must be a string.')
-      elif len(value) <= 2:
+      elif len(value.strip()) <= 2:
         raise ValueError("Type must be more than 2 characters")
-      elif len(value) >= 15:
+      elif len(value.strip()) >= 15:
         raise ValueError("Type must be less than 16 characters")
       return value
   
@@ -48,9 +48,9 @@ class Equipment(db.Model, SerializerMixin):
       raise AssertionError("Equipment manifacture is required")
     elif not isinstance(value, str):
       raise Exception('Manifacture must be a string.')
-    elif len(value) < 2:
+    elif len(value.strip()) < 2:
       raise ValueError("Manifacture must be more than 2 characters")
-    elif len(value) >= 25:
+    elif len(value.strip()) >= 25:
       raise ValueError("Manifacture must be less than 25 characters")
     return value
     
@@ -60,9 +60,9 @@ class Equipment(db.Model, SerializerMixin):
       raise AssertionError("Equipment model is required")
     elif not isinstance(value, str):
       raise Exception('Model must be a string.')
-    elif len(value) < 2:
+    elif len(value.strip()) < 2:
       raise ValueError("Model must be more than 2 characters")
-    elif len(value) > 25:
+    elif len(value.strip()) > 25:
       raise ValueError("Model must be less than 25 characters")
     return value
   
@@ -82,9 +82,9 @@ class Equipment(db.Model, SerializerMixin):
       raise AssertionError("Equipment length is required")
     elif not isinstance(value, str):
       raise Exception('Length must be a string.')
-    elif len(value) < 1:
+    elif len(value.strip()) < 1:
       raise ValueError("Length must be more than 50.0")
-    elif len(value) > 10:
+    elif len(value.strip()) > 10:
       raise ValueError("Length must be less than 300.0")
     return value
   
@@ -92,9 +92,9 @@ class Equipment(db.Model, SerializerMixin):
   def validate_width(self, _, value):
     if not isinstance(value, str):
       raise Exception('Width must be a string.')
-    elif len(value) < 1:
+    elif len(value.strip()) < 1:
       raise ValueError("Width must be more than 0.0")
-    elif len(value) > 10:
+    elif len(value.strip()) > 10:
       raise ValueError("Width must be less than 400.0")
     return value
   

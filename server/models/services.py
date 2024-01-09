@@ -14,6 +14,7 @@ class Service(db.Model, SerializerMixin):
   description = db.Column(db.String)
   price = db.Column(db.Float)
   average_turn_around = db.Column(db.String)
+  image = db.Column(db.String)
   is_available = db.Column(db.String)
   
   athlete_services = db.relationship("AthleteService", back_populates="services") 

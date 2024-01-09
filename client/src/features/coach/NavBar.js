@@ -1,23 +1,17 @@
 import {useState, useEffect} from "react"
-import {useSelector} from "react-redux"
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Grid, Menu, Segment, Button, Form, Input } from 'semantic-ui-react'
+import { useLocation } from 'react-router-dom';
+import { Grid, Menu, Segment } from 'semantic-ui-react'
 import EditCoachForm from './EditCoachForm'
 import AddAthleteForm from "../athlete/AddAthleteForm"
 import AthleteCards from "../athlete/AthleteCards"
-
-
+import BookAppointment from "../appointment/BookAppiontment";
+import CoachAppointments from "../appointment/CoachAppointments";
 
 const MenuExampleTabularOnLeft = () => {
-  const navigate = useNavigate()
-  // const athlete = useSelector((state) => state.athlete.data)
   const location = useLocation();
   const [menuState, setMenuState] = useState({activeItem: 'athletes'})
 
   const handleItemClick = (e, { name }) => setMenuState({ activeItem: name })
-
-  
-
 
   const { activeItem } = menuState
 
@@ -25,23 +19,24 @@ const MenuExampleTabularOnLeft = () => {
     if (location.pathname === '/editathlete') {
       setMenuState({ activeItem: 'add-athlete' });
     } else {
-      setMenuState({ activeItem: 'athletes' }); // Set the default active item for other routes
+      setMenuState({ activeItem: 'athletes' });
     }
   }, [location.pathname]);
 
-    if (activeItem === 'book-athlete-services') {
+    if (activeItem === 'book-appointment') {
       return (
+        <div style={{ marginTop: '20px', marginBottom: "104px" }}>
         <Grid>
         <Grid.Column width={4}>
-          <Menu fluid vertical tabular>
+        <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
           <Menu.Item
               name='athletes'
               active={activeItem === 'athletes'}
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -64,38 +59,28 @@ const MenuExampleTabularOnLeft = () => {
         </Grid.Column>
 
         <Grid.Column stretched width={12}>
-          <Segment>
-          <Form>
-          
-          <Form.Field>
-            <label>Username</label>
-            <Input placeholder='Enter your username' />
-          </Form.Field>
-          <Form.Field>
-            <label>Password</label>
-            <Input type='password' placeholder='Enter your password' />
-          </Form.Field>
-          <Button type='submit'>Submit</Button>
-        </Form>
+          <Segment style={{ marginTop: '-20vh', maxWidth: '664px' }}>
+            <BookAppointment handleItemClick={handleItemClick}/>
           </Segment>
         </Grid.Column>
       </Grid>
-        
+        </div>
     )}
 
     if (activeItem === 'view-appointments') {
       return (
+        <div style={{ marginTop: '20px', marginBottom: "30px" }}>
         <Grid>
         <Grid.Column width={4}>
-          <Menu fluid vertical tabular>
+        <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
           <Menu.Item
               name='athletes'
               active={activeItem === 'athletes'}
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -118,28 +103,28 @@ const MenuExampleTabularOnLeft = () => {
         </Grid.Column>
 
         <Grid.Column stretched width={12}>
-        <Segment>
-            This is an stretched grid column. This segment will always match the
-            tab height
+        <Segment style={{ marginTop: '-30vh', maxWidth: '664px' }}>
+          <CoachAppointments handleItemClick={handleItemClick}/>
           </Segment>
         </Grid.Column>
       </Grid>
-        
+        </div>
     )}
 
     if (activeItem === 'add-athlete') {
       return (
+        <div style={{ marginTop: '20px', marginBottom: "30px" }}>
         <Grid>
         <Grid.Column width={4}>
-          <Menu fluid vertical tabular>
+        <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
           <Menu.Item
               name='athletes'
               active={activeItem === 'athletes'}
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -160,24 +145,29 @@ const MenuExampleTabularOnLeft = () => {
           </Menu>
           
         </Grid.Column>
-        <><AddAthleteForm handleItemClick={handleItemClick} /></>
+        <Grid.Column width={12}>
+        <Segment style={{ marginTop: '-37vh', maxWidth: '664px'}}>
+          <AddAthleteForm handleItemClick={handleItemClick} />
+          </Segment>
+        </Grid.Column>  
       </Grid>
-        
+        </div>
     )}
 
     if (activeItem === 'edit-account') {
       return (
+        <div style={{ marginTop: '20px', marginBottom: "111px" }}>
         <Grid>
         <Grid.Column width={4}>
-          <Menu fluid vertical tabular>
+        <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
           <Menu.Item
               name='athletes'
               active={activeItem === 'athletes'}
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -197,27 +187,31 @@ const MenuExampleTabularOnLeft = () => {
             />
           </Menu>
           
-        </Grid.Column>
-           <><EditCoachForm /></>
+        </Grid.Column >
+        <Grid.Column width={12}>
+        <Segment style={{ marginTop: '-36vh', maxWidth: '664px' }}>
+         <EditCoachForm handleItemClick={handleItemClick}/>
+        </Segment>
+        </Grid.Column>   
       </Grid>
-        
+        </div>
     )}
 
     return (
-      <div>
+      <div style={{ marginTop: '20px', marginBottom: "30px" }}>
       <Grid>
        
         <Grid.Column width={4}>
           
-          <Menu fluid vertical tabular>
+          <Menu fluid vertical tabular style={{ background: 'rgba(255, 255, 255, 0.8)' }}>
           <Menu.Item
               name='athletes'
               active={activeItem === 'athletes'}
               onClick={handleItemClick}
             />
             <Menu.Item
-              name='book-athlete-services'
-              active={activeItem === 'book-athlete-services'}
+              name='book-appointment'
+              active={activeItem === 'book-appointment'}
               onClick={handleItemClick}
             />
             <Menu.Item
@@ -241,7 +235,9 @@ const MenuExampleTabularOnLeft = () => {
         </Grid.Column>
        
         <Grid.Column width={12}>
-         <AthleteCards />
+          <Segment style={{ marginTop: '-30vh', maxWidth: '664px'}}>
+          <AthleteCards handleItemClick={handleItemClick}/>
+          </Segment>
          </Grid.Column>
       </Grid>
       </div>

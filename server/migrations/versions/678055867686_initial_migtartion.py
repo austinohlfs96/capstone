@@ -1,8 +1,8 @@
-"""initial migration
+"""initial migtartion
 
-Revision ID: 9edda2e6df9d
+Revision ID: 678055867686
 Revises: 
-Create Date: 2023-12-08 11:29:06.831128
+Create Date: 2023-12-19 11:50:25.656534
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9edda2e6df9d'
+revision = '678055867686'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,7 +29,9 @@ def upgrade():
     sa.Column('is_member', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('email', name='_coach_email_uc')
     )
     op.create_table('services',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -37,6 +39,7 @@ def upgrade():
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('price', sa.Float(), nullable=True),
     sa.Column('average_turn_around', sa.String(), nullable=True),
+    sa.Column('image', sa.String(), nullable=True),
     sa.Column('is_available', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -59,7 +62,7 @@ def upgrade():
     sa.Column('weight', sa.String(), nullable=False),
     sa.Column('gender', sa.String(), nullable=True),
     sa.Column('stance', sa.String(), nullable=True),
-    sa.Column('boot_size', sa.Integer(), nullable=False),
+    sa.Column('boot_size', sa.String(), nullable=False),
     sa.Column('discipline', sa.String(), nullable=False),
     sa.Column('profile_picture', sa.String(), nullable=True),
     sa.Column('coaches_id', sa.Integer(), nullable=True),
@@ -74,8 +77,8 @@ def upgrade():
     sa.Column('manifacture', sa.String(), nullable=False),
     sa.Column('model', sa.String(), nullable=False),
     sa.Column('year', sa.Integer(), nullable=True),
-    sa.Column('length', sa.Float(), nullable=False),
-    sa.Column('width', sa.Float(), nullable=False),
+    sa.Column('length', sa.String(), nullable=False),
+    sa.Column('width', sa.String(), nullable=False),
     sa.Column('athlete_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),

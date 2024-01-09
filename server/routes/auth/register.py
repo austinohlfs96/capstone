@@ -20,6 +20,7 @@ class Register(Resource):
                 "name": request.get_json().get("name"),
                 "email": request.get_json().get("email"),
                 "team": request.get_json().get("team"),
+                "profile_picture": request.get_json().get("profile_picture")
             }
             coach_schema.validate(data)
             coach = coach_schema.load(data)
@@ -38,5 +39,5 @@ class Register(Resource):
                 201,
             )
         except (Exception, IntegrityError) as e:
-            db.session.rollback()
+            db.session.rollback() 
             return {"message": str(e)}, 400
