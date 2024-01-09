@@ -30,7 +30,7 @@ const Services = () => {
       <Head />
       <div className='modal'>
         <div id="services">
-          <Segment className="services-segment">
+          <Segment className="services-segment" >
             <h1>Services</h1>
             <Item.Group>
               {services.map((service) => (
@@ -38,7 +38,7 @@ const Services = () => {
                   <Image src={service.image} size='medium' floated='left' />
                   <Item>
                     <Item.Content>
-                      <Item.Header>{service.name}</Item.Header>
+                      <h3>{service.name}</h3>
                       <Item.Meta>
                         <span className='price'>{`Price: $${service.price}`}</span>
                       </Item.Meta>

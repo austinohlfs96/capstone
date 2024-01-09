@@ -38,46 +38,48 @@ const LandingPage = () => {
         marginRight: '120px',
         marginLeft: '9px',
         marginTop: "70px",
-        height: '30vh'
+        height: 'auto'
          }}>
         <Image
           src="https://www.usskiandsnowboard.org/sites/default/files/paragraph/single-image-caption/2020-01/maggiepodium%20.jpg"
           size="medium"
           floated="left"
         />
-        <h2 style={{textAlign: "center"}}>Title</h2>
+        <h2 style={{textAlign: "center"}}>Mission</h2>
         <h3 style={{textAlign: "center"}}>
-          Welcome to Æsir Performance Tunes, your premier destination for professional performance ski and snowboard tuning.</h3> 
+        At Æsir Performance Tunes, our mission is to elevate the winter sports compition by providing unmatched tuning services that empower athletes and coaches to achieve their highest potential on the slopes. We are committed to excellence, constantly pushing the boundaries of performance tuning through innovation and precision. Our goal is to be the trusted partner for winter sports enthusiasts, delivering quality tuning that not only meets but exceeds the rigorous demands of competitive skiing and snowboarding. With a passion for the sport and a dedication to craftsmanship, we strive to enhance the joy and success of every individual who chooses Æsir Performance Tunes.</h3> 
           </Segment>
           <Segment style={{ 
         background: 'rgba(255, 255, 255, 0.9)',
         marginLeft: '120px',
         marginRight: '9px',
         marginTop: "70px",
-        height: '26vh'
+        height: 'auto'
          }}>
           <Image
           src="https://nbcsports.brightspotcdn.com/dims4/default/9966318/2147483647/strip/true/crop/2195x1235+0+128/resize/1440x810!/quality/90/?url=https%3A%2F%2Fnbc-sports-production-nbc-sports.s3.us-east-1.amazonaws.com%2Fbrightspot%2Fbe%2F53%2F26a974c6d3488d4f6700bd8145ae%2Fdwise.jpg"
           size="medium"
           floated="right"
         />
-        <h2 style={{textAlign: "center"}}>Title</h2>
-          <h3 style={{textAlign: "center"}}> At Æsir Performance Tunes, we take pride in our commitment to excellence and our passion for elevating winter sports performance.</h3> 
+        <h2 style={{textAlign: "center"}}>Premier Services</h2>
+          <h3 style={{textAlign: "center"}}>Discover a new level of performance with Æsir Performance Tunes' premier tuning services. Our offerings are meticulously crafted to cater to the unique needs of athletes and coaches, setting us apart as the premier destination for professional ski and snowboard tuning. We utilize cutting-edge equipment and high-end products to ensure that every tuning process is executed with precision.
+
+</h3> 
           </Segment>
           <Segment style={{ 
         background: 'rgba(255, 255, 255, 0.9)',
         marginRight: '120px',
         marginLeft: '9px',
         marginTop: "70px",
-        height: '30vh'
+        height: 'auto'
          }}>
         <Image
           src="https://www.snowboarder.com/.image/t_share/MTk2MzUwOTc2MjcyNDQzMzMx/tuning-taylor-boyd-02.jpg"
           size="medium"
           floated="left"
         />
-        <h2 style={{textAlign: "center"}}>Title</h2>
-        <h3 style={{textAlign: "center"}}> With a dedicated team of skilled technicians and state-of-the-art machinery, we offer top-tier tuning services tailored for athletes and coaches seeking to outperform the competition.
+        <h2 style={{textAlign: "center"}}>Our Crew</h2>
+        <h3 style={{textAlign: "center"}}>Our success at Æsir Performance Tunes is driven by the expertise and passion of our professional employees and technicians. With a dedicated team of skilled individuals who share a genuine love for winter sports, we take pride in delivering unparalleled tuning experiences. Our technicians are not just experts in their field; they are enthusiasts who understand the intricacies of competitive skiing and snowboarding.
         </h3>
       </Segment>
       <div style={{marginBottom: "10px"}}>

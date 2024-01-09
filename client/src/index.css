@@ -50,8 +50,8 @@ code {
 }
 
 #title{
-margin-top: -15px;
-margin-bottom: 0px;
+margin-top: -7px;
+margin-bottom: 12px;
 }
 
 #headerButtons {
@@ -96,17 +96,14 @@ form.ui.form div.field div.ui.input input:-webkit-autofill:focus {
 
 
 /* _______________________________services responsive css_________________ */
-/* @media only screen and (max-width: 767px) {
-  .services-segment {
-    padding: 10px;
-  }
+
 
   .service-item {
-    flex-direction: column;
+    display: grid;
   }
 
   .service-item img {
     margin-bottom: 10px;
   } 
-} */
+
 
